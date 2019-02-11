@@ -29,8 +29,11 @@
     <ClInclude Include="DataTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LinesProcessor.h">
+    <ClInclude Include="LinesProcessor.c">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LinesProcessor.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

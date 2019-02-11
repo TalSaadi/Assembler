@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="DataTypes.h" />
     <ClInclude Include="LinesProcessor.h" />
+    <ClInclude Include="LinesProcessor.c" />
     <ClInclude Include="Reader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
