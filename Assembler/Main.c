@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 	else {
-		for (; i <= argc; i++) {
+		for (; i < argc; i++) {
 			read(*(argv + i));
 		}
 	}
