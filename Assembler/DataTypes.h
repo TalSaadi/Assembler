@@ -26,4 +26,5 @@ typedef struct address_mode {
 typedef struct machine_code_type {
 	char** machine_code;
 	int isdata;
+	int num_lines;
 }machine_code_type;

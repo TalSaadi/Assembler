@@ -6,14 +6,17 @@
 #define MAX_LINE_SIZE 80
 #define OPCODE_LENGTH 16
 
-machine_code_type * process(char *line);
+machine_code_type * process(char *line, int IC, int DC, sign_table_ptr * sign_head);
 int is_empty(char *line);
 int search_sign(sign_table_ptr *head, char *sign);
-char * search_code(opcode opcode_table[], char * code);
+char * search_code(char * code);
 address_mode analyze_arguments(char * code, char * arguments);
 int check_address_code(char * argument);
 sign_table_ptr* create(char * flag, int DC, int isext, int iscode, sign_table_ptr* next);
-sign_table_ptr* append(sign_table_ptr* head, char * flag, int DC, int isext, int iscode);
+void append(sign_table_ptr *head, char * flag, int DC, int isext, int iscode);
+int legal_sign(char *sign);
+int legal_reg(char *reg);
+void free_array(int **a, int m);
 
 
 void read(char filename[])
@@ -23,16 +26,17 @@ void read(char filename[])
 	error * errors = NULL;
 	error * current = errors;
 	machine_code_type * machine_code;
-	int IC = 0, DC = 0, code_size;
+	sign_table_ptr sign_head;
+	sign_head.sign;
+	int IC = 0, DC = 0;
 	char Instructions[1000][13];
 	char Data[1000][13];
 	#pragma warning(suppress : 4996)
 	file = fopen(strcat(filename, ".as"), "r");
 	if (file) {
 		while (fgets(line, MAX_LINE_SIZE, file) != NULL) {
-			machine_code = process(line, IC, DC);
-			code_size = sizeof(machine_code->machine_code) / sizeof(machine_code->machine_code[0]);
-			for (int i = 0; i < code_size; i++) {
+			machine_code = process(line, IC, DC, &sign_head);
+			for (int i = 0; i < machine_code->num_lines; i++) {
 				if (machine_code == NULL) {
 					continue;
 				}
@@ -47,6 +51,7 @@ void read(char filename[])
 					IC++;
 				}
 			}
+			free_array(machine_code->machine_code, machine_code->num_lines);
 		}
 		fclose(file);
 		if (errors == NULL) {
@@ -62,11 +67,9 @@ void read(char filename[])
 	}
 }
 
-machine_code_type * process(char *line, int IC, int DC) {
-	opcode opcode_table[OPCODE_LENGTH] = { {"mov", "0000"}, {"cmp", "0001"}, {"add", "0010"}, {"sub", "0011"}, {"not", "0100"}, {"clr", "0101"}, {"lea", "0110"}, {"inc", "0111"}, {"dec", "1000"}, {"jmp", "1001"}, {"bne", "1010"}, {"red", "1011"}, {"prn", "1100"}, {"jsr", "1101"}, {"rts", "1110"}, {"stop", "1111"} };
+machine_code_type * process(char *line, int IC, int DC, sign_table_ptr * sign_head) {	
 	int found_flag = 0;
 	char * flag = "";
-	sign_table_ptr *sign_head = NULL;
 	address_mode mode;
 	machine_code_type machine_code;
 	char ** remachine_code;
@@ -80,6 +83,10 @@ machine_code_type * process(char *line, int IC, int DC) {
 	}
 	else {
 		machine_code.machine_code = (char **)malloc((num_lines + 1) * sizeof(char*));
+		if (machine_code.machine_code == NULL) {
+			printf("Unable to allocate memory");
+			exit();
+		}
 		#pragma warning(suppress : 4996)
 		line = strtok(line, " ");
 	    if (*(line + (strlen(line) - 1)) == ':') {
@@ -87,14 +94,20 @@ machine_code_type * process(char *line, int IC, int DC) {
 				printf("Sign already found");
 				exit();
 			}
-			found_flag = 1;
-			flag = line;
+			else if (!legal_sign(line)) {
+				printf("Not a legal sign");
+				exit();
+			}
+			else {
+				found_flag = 1;
+				flag = line;
+			}
 		}
 		#pragma warning(suppress : 4996)
 		line = strtok(NULL, " ");
 		if (strcmp(line, ".data") == 0) {
 			if (found_flag) {
-				sign_head = append(sign_head, flag, DC, 0, 0);
+				append(sign_head, flag, DC, 0, 0);
 			}
 			#pragma warning(suppress : 4996)
 			line = strtok(NULL, ",");
@@ -104,6 +117,10 @@ machine_code_type * process(char *line, int IC, int DC) {
 			}
 			while (line != NULL) {
 				machine_code.machine_code[num_lines] = (char*)malloc(13 * sizeof(char));
+				if (machine_code.machine_code[num_lines] == NULL) {
+					printf("Unable to allocate memory");
+					exit();
+				}
 				int num;
 				if (atoi(line) < 0) {
 					num = ~atoi(line) + 1;
@@ -117,6 +134,10 @@ machine_code_type * process(char *line, int IC, int DC) {
 				machine_code.machine_code[num_lines][12] = '\0';
 				num_lines++;
 				machine_code.machine_code = (char **)realloc(machine_code.machine_code, (num_lines + 1) * sizeof(*machine_code.machine_code));
+				if (machine_code.machine_code == NULL) {
+					printf("Unable to allocate memory");
+					exit();
+				}
 				#pragma warning(suppress : 4996)
 				line = strtok(NULL, ",");
 			}
@@ -124,7 +145,7 @@ machine_code_type * process(char *line, int IC, int DC) {
 		}
 		else if (strcmp(line, ".string") == 0) {
 			if (found_flag) {
-				sign_head = append(sign_head, flag, DC, 0, 0);
+				append(sign_head, flag, DC, 0, 0);
 			}
 			#pragma warning(suppress : 4996)
 			line = strtok(NULL, " ");
@@ -133,15 +154,27 @@ machine_code_type * process(char *line, int IC, int DC) {
 				while (*line != '"') {
 					int num = *line;
 					machine_code.machine_code[num_lines] = malloc(13 * sizeof(char));
+					if (machine_code.machine_code[num_lines] == NULL) {
+						printf("Unable to allocate memory");
+						exit();
+					}
 					for (int i = 0; i < 12; num = num >> 1, i++) {
 						machine_code.machine_code[num_lines][i] = (num & 1) + '0';
 					}
 					machine_code.machine_code[num_lines][12] = '\0';
 					num_lines++;
-					machine_code.machine_code = realloc(machine_code, (num_lines + 1) * sizeof(char *));			
+					machine_code.machine_code = realloc(machine_code.machine_code, (num_lines + 1) * sizeof(char *));			
+					if (machine_code.machine_code == NULL) {
+						printf("Unable to allocate memory");
+						exit();
+					}
 					line++;
 				}
 				machine_code.machine_code[num_lines] = malloc(13 * sizeof(char));
+				if (machine_code.machine_code[num_lines] == NULL) {
+					printf("Unable to allocate memory");
+					exit();
+				}
 				#pragma warning(suppress : 4996)
 				strcpy(machine_code.machine_code[num_lines], "000000000000");
 				machine_code.isdata = 1;
@@ -161,20 +194,24 @@ machine_code_type * process(char *line, int IC, int DC) {
 					printf("Sign already found");
 					exit();
 				}
-				sign_head = append(sign_head, flag, DC, 1, 0);
+				append(sign_head, flag, DC, 1, 0);
 			}
 		}
 		else {
 			if (found_flag) {
-				sign_head = append(sign_head, flag, DC, 0, 1);
+				append(sign_head, flag, IC, 0, 1);
 			}
 			#pragma warning(suppress : 4996)
-			char * op = search_code(opcode_table, line);
+			char * op = search_code(line);
 			if (op == NULL) {
 				printf("Code wasn't found");
 				exit();
 			}
 			machine_code.machine_code[0] = malloc(13 * sizeof(char));
+			if (machine_code.machine_code[0] == NULL) {
+				printf("Unable to allocate memory");
+				exit();
+			}
 			char * code = line;
 			#pragma warning(suppress : 4996)
 			mode = analyze_arguments(code, line);
@@ -192,6 +229,7 @@ machine_code_type * process(char *line, int IC, int DC) {
 			machine_code.isdata = 0;
 		}
 	}
+	machine_code.num_lines = num_lines;
 	return &machine_code;
 }
 
@@ -206,8 +244,14 @@ int is_empty(char *line) {
 
 int search_sign(sign_table_ptr *head, char *sign) {
 	sign_table_ptr *ptr = head;
+	if (ptr->sign == NULL || strcmp(ptr->sign, sign) == 0) {
+		return 0;
+	}
+	else {
+		ptr = ptr->next;
+	}
 	while (ptr != NULL) {
-		if (head->sign == sign) {
+		if (strcmp(ptr->sign, sign) == 0) {
 			return 1;
 		}
 		ptr = ptr->next;
@@ -215,7 +259,8 @@ int search_sign(sign_table_ptr *head, char *sign) {
 	return 0;
 }
 
-char * search_code(opcode opcode_table[], char * code) {
+char * search_code(char * code) {
+	opcode opcode_table[OPCODE_LENGTH] = { {"mov", "0000"}, {"cmp", "0001"}, {"add", "0010"}, {"sub", "0011"}, {"not", "0100"}, {"clr", "0101"}, {"lea", "0110"}, {"inc", "0111"}, {"dec", "1000"}, {"jmp", "1001"}, {"bne", "1010"}, {"red", "1011"}, {"prn", "1100"}, {"jsr", "1101"}, {"rts", "1110"}, {"stop", "1111"} };
 	int i;
 	for (i = 0; i < OPCODE_LENGTH; i++) {
 		if (strcmp(opcode_table[i].code, code) == 0) {
@@ -351,14 +396,31 @@ address_mode analyze_arguments(char * code, char * arguments) {
 
 int check_address_code(char * argument) {
 	if (*argument == '@') {
-		return "101";
+		if (legal_reg(argument + 1)) {
+			return "101";
+		}
+		else {
+			printf("Not a legal register");
+			exit();
+		}
+		
 	}
 	else if (isalpha(*argument)) {
-		return "011";
+		if (legal_sign(argument)) {
+			return "011";
+		}
+		else {
+			printf("Not a legal sign");
+			exit();
+		}
 	}
 	else {
+		if (!isdigit(*(argument)) || *(argument) != '+' || *(argument) != '-') {
+			printf("Not a valid argument");
+			exit();
+		}
 		for (int i = 0; i < strlen(argument); i++) {
-			if (!isdigit(*(argument + i)) || *(argument + i) != '+' || *(argument + i) != '-') {
+			if (!isdigit(*(argument + i))) {
 				printf("Not a valid argument");
 				exit();
 			}
@@ -367,33 +429,37 @@ int check_address_code(char * argument) {
 	}
 }
 
-sign_table_ptr* append(sign_table_ptr* head, char * flag, int DC, int isext, int iscode)
+void append(sign_table_ptr* head, char * flag, int place, int isext, int iscode)
 {
 	/* go to the last node */
 	sign_table_ptr *cursor = head;
-	if (head == NULL) {
-		head = (sign_table_ptr*)malloc(sizeof(sign_table_ptr));
+	if (head->sign == NULL) {
+		/*head = (sign_table_ptr*)malloc(sizeof(sign_table_ptr));
 		if (head == NULL) {
 			printf("Unable to allocate");
 			exit();
 		}
-		else {
-			head->sign = flag;
-			head->place = DC;
-			head->isext = isext;
-			head->iscode = iscode;
-			head->next = NULL;
-			return head;
+		else {*/
+		head->sign = (char*)malloc(sizeof(flag));
+		if (head->sign == NULL) {
+			printf("Unable to allocate memory");
+			exit();
 		}
+		#pragma warning(suppress : 4996)
+		strcpy(head->sign, flag);
+		head->place = place;
+		head->isext = isext;
+		head->iscode = iscode;
+		head->next = NULL;
+		return;
+		/*}*/
 	}
 	while (cursor->next != NULL)
 		cursor = cursor->next;
 
 	/* create a new node */
-	sign_table_ptr* new_node = create(flag, DC, isext, iscode, NULL);
+	sign_table_ptr* new_node = create(flag, place, isext, iscode, NULL);
 	cursor->next = new_node;
-
-	return head;
 }
 
 sign_table_ptr* create(char * flag, int DC, int isext, int iscode, sign_table_ptr* next)
@@ -404,11 +470,46 @@ sign_table_ptr* create(char * flag, int DC, int isext, int iscode, sign_table_pt
 		printf("Error creating a new node.\n");
 		exit(0);
 	}
-	new_node->sign = flag;
+	new_node->sign = (char *)malloc(sizeof(flag));
+	if (new_node->sign == NULL) {
+		printf("Unable to allocate memory");
+		exit();
+	}
+	#pragma warning(suppress : 4996)
+	strcpy(new_node->sign, flag);
 	new_node->place = DC;
 	new_node->isext = isext;
 	new_node->iscode = iscode;
 	new_node->next = next;
 
 	return new_node;
+}
+
+int legal_sign(char *sign) {
+	if (legal_reg(sign)) {
+		return 0;
+	}
+	else if (search_code(sign) != NULL) {
+		return 0;
+	}
+	else {
+		return 1;
+	}
+}
+
+int legal_reg(char *reg) {
+	if (*reg == 'r') {
+		if (isdigit(*(reg + 1)) && *(reg + 1) - '0' <= 7) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+void free_array(int **a, int m) {
+	int i;
+	for (i = 0; i < m; ++i) {
+		free(a[i]);
+	}
+	free(a);
 }
