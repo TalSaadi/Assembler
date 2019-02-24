@@ -15,25 +15,55 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Reader.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Reader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DataTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LinesProcessor.c">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LinesProcessor.h">
+    <ClInclude Include="FirstProcess.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Memory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ArgsEncoder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StringsProcess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Reader.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FirstProcess.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ArgsEncoder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SignTable.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SignTable.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StringsProcess.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Encoding.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Encoding.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

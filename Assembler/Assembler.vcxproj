@@ -139,14 +139,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Main.c" />
-    <ClCompile Include="Reader.c" />
+    <ClInclude Include="ArgsEncoder.h" />
+    <ClInclude Include="DataTypes.h" />
+    <ClInclude Include="FirstProcess.h" />
+    <ClInclude Include="Memory.h" />
+    <ClInclude Include="Reader.h" />
+    <ClInclude Include="StringsProcess.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DataTypes.h" />
-    <ClInclude Include="LinesProcessor.h" />
-    <ClInclude Include="LinesProcessor.c" />
-    <ClInclude Include="Reader.h" />
+    <ClCompile Include="ArgsEncoder.c" />
+    <ClCompile Include="Encoding.c" />
+    <ClCompile Include="Encoding.h" />
+    <ClCompile Include="FirstProcess.c" />
+    <ClCompile Include="Main.c" />
+    <ClCompile Include="Memory.c" />
+    <ClCompile Include="Reader.c" />
+    <ClCompile Include="SignTable.c" />
+    <ClCompile Include="SignTable.h" />
+    <ClCompile Include="StringsProcess.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

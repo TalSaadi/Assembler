@@ -1,15 +1,9 @@
+#pragma once
+
 typedef struct error {
 	char *desc;
 	struct error * next;
 }error;
-
-typedef struct sign_table_ptr {
-	char * sign;
-	int place;
-	int isext;
-	int iscode;
-	struct sign_table_ptr * next;
-}sign_table_ptr;
 
 typedef struct opcode {
 	char * code;
