@@ -12,6 +12,8 @@
 #include "StringsProcess.h"
 
 #define OPCODE_LENGTH 16
+#define MEMORY_SIZE 1024
+#define WORD_SIZE 13
 
 char * search_code(char * code) {
 	opcode opcode_table[OPCODE_LENGTH] = { {"mov", "0000"}, {"cmp", "0001"}, {"add", "0010"}, {"sub", "0011"}, {"not", "0100"}, {"clr", "0101"}, {"lea", "0110"}, {"inc", "0111"}, {"dec", "1000"}, {"jmp", "1001"}, {"bne", "1010"}, {"red", "1011"}, {"prn", "1100"}, {"jsr", "1101"}, {"rts", "1110"}, {"stop", "1111"} };
@@ -309,6 +311,7 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 				exit(0);
 			}
 			encode_reg(machine_code, mode.first_arg, 1);
+			return 1;
 		}
 		else if (strcmp(mode.second_mode, "101") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
@@ -342,6 +345,97 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 					exit(0);
 				}
 				encode_sign(machine_code, 2);
+				return 2;
+			}
+		}
+	}
+}
+
+int address_data_second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], address_mode mode, sign_table_ptr * sign_head, int IC) {
+	int sign_index, i;
+	if (mode.first_arg == NULL) {
+		if (mode.second_mode == NULL) {
+			return 0;
+		}
+		else if (strcmp(mode.second_mode, "011") == 0) {
+			sign_index = sign_place(sign_head, mode.second_arg);
+			Instructions[IC][0] = '0';
+			Instructions[IC][1] = '0';
+			for (i = 2; i < 12; sign_index = sign_index >> 1, i++) {
+				Instructions[IC][i] = (sign_index & 1) + '0';
+			}
+			Instructions[IC][12] = '\0';
+			return 1;
+		}
+		else {
+			return 1;
+		}
+	}
+	else if (strcmp(mode.first_arg, "001") == 0) {
+		IC++;
+		if (mode.second_mode == NULL) {
+			return 1;
+		}
+		else if (strcmp(mode.second_mode, "011") == 0) {
+			sign_index = sign_place(sign_head, mode.second_arg);
+			Instructions[IC][0] = '0';
+			Instructions[IC][1] = '0';
+			for (i = 2; i < 12; sign_index = sign_index >> 1, i++) {
+				Instructions[IC][i] = (sign_index & 1) + '0';
+			}
+			Instructions[IC][12] = '\0';
+			return 1;
+		}
+		else {
+			return 2;
+		}
+	}
+	else if (strcmp(mode.first_mode, "011") == 0) {
+		sign_index = sign_place(sign_head, mode.first_arg);
+		Instructions[IC][0] = '0';
+		Instructions[IC][1] = '0';
+		for (i = 2; i < 12; sign_index = sign_index >> 1, i++) {
+			Instructions[IC][i] = (sign_index & 1) + '0';
+		}
+		Instructions[IC][12] = '\0';
+		IC++;
+		if (mode.second_mode == NULL) {
+			return 1;
+		}
+		else if (strcmp(mode.second_mode, "011") == 0) {
+			sign_index = sign_place(sign_head, mode.second_arg);
+			Instructions[IC][0] = '0';
+			Instructions[IC][1] = '0';
+			for (i = 2; i < 12; sign_index = sign_index >> 1, i++) {
+				Instructions[IC][i] = (sign_index & 1) + '0';
+			}
+			Instructions[IC][12] = '\0';
+			return 2;
+		}
+		else {
+			return 2;
+		}
+	}
+	else if (strcmp(mode.first_mode, "101") == 0) {
+		IC++;
+		if (mode.second_mode == NULL) {
+			return 1;
+		}
+		else if (strcmp(mode.second_mode, "101") == 0) {
+			return 1;
+		}
+		else {
+			if (strcmp(mode.second_mode, "001") == 0) {
+				return 2;
+			}
+			else if (strcmp(mode.second_mode, "011") == 0) {
+				sign_index = sign_place(sign_head, mode.second_arg);
+				Instructions[IC][0] = '0';
+				Instructions[IC][1] = '0';
+				for (i = 2; i < 12; sign_index = sign_index >> 1, i++) {
+					Instructions[IC][i] = (sign_index & 1) + '0';
+				}
+				Instructions[IC][12] = '\0';
 				return 2;
 			}
 		}

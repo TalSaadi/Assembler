@@ -144,6 +144,7 @@
     <ClInclude Include="FirstProcess.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="Reader.h" />
+    <ClInclude Include="SecondProcess.h" />
     <ClInclude Include="StringsProcess.h" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +155,7 @@
     <ClCompile Include="Main.c" />
     <ClCompile Include="Memory.c" />
     <ClCompile Include="Reader.c" />
+    <ClCompile Include="SecondProcess.c" />
     <ClCompile Include="SignTable.c" />
     <ClCompile Include="SignTable.h" />
     <ClCompile Include="StringsProcess.c" />

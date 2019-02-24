@@ -30,6 +30,7 @@ void read(char filename[])
 	sign_head.sign = NULL;
 	#pragma warning(suppress : 4996)
 	file = fopen(strcat(filename, ".as"), "r");
+	/* First Process */
 	if (file) {
 		while (fgets(line, MAX_LINE_SIZE, file) != NULL) {
 			machine_code = first_process(line, IC, DC, &sign_head);
@@ -56,11 +57,23 @@ void read(char filename[])
 		}
 		else {
 			printf("Errors were found\n");
-			return;
+			exit(0);
 		}
 	}
 	else {
 		printf("File not found\n");
+		return;
 	}
+
+	int Second_IC = 0;
+	#pragma warning(suppress : 4996)
+	file = fopen(filename, "r");
+	/* Second Process */
+	if (file) {
+		while (fgets(line, MAX_LINE_SIZE, file) != NULL) {
+			Second_IC = second_process((char *)Instructions, line, &sign_head, Second_IC);
+		}
+	}
+
 	free_sign_table(&sign_head);
 }

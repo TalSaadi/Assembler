@@ -83,4 +83,5 @@ void encode_sign(machine_code_type *machine_code, int line) {
 	for (i = 0; i < 12; i++) {
 		machine_code->machine_code[line][i] = '?';
 	}
+	machine_code->machine_code[line][12] = '\0';
 }

@@ -33,6 +33,9 @@
     <ClInclude Include="StringsProcess.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SecondProcess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.c">
@@ -63,6 +66,9 @@
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="Encoding.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SecondProcess.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

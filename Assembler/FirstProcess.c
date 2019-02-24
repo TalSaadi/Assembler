@@ -151,7 +151,7 @@ machine_code_type first_process(char *line, int IC, int DC, sign_table_ptr * sig
 		}
 		else {
 			if (found_flag) {
-				append(sign_head, flag, IC, 0, 1);
+				append(sign_head, flag, IC, 0, 0);
 			}
 			#pragma warning(suppress : 4996)
 			op = search_code(line);

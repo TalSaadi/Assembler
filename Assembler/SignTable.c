@@ -11,7 +11,7 @@
 #include "Encoding.h"
 #include "StringsProcess.h"
 
-void append(sign_table_ptr* head, char * flag, int place, int isext, int iscode)
+void append(sign_table_ptr* head, char * flag, int place, int isext, int isent)
 {
 	/* go to the last node */
 	sign_table_ptr *cursor = head;
@@ -24,11 +24,11 @@ void append(sign_table_ptr* head, char * flag, int place, int isext, int iscode)
 			printf("Unable to allocate memory");
 			exit(0);
 		}
-#pragma warning(suppress : 4996)
+		#pragma warning(suppress : 4996)
 		strcpy(head->sign, flag);
 		head->place = place;
 		head->isext = isext;
-		head->iscode = iscode;
+		head->isent = isent;
 		head->next = NULL;
 		return;
 	}
@@ -36,11 +36,11 @@ void append(sign_table_ptr* head, char * flag, int place, int isext, int iscode)
 		cursor = cursor->next;
 
 	/* create a new node */
-	new_node = create(flag, place, isext, iscode, NULL);
+	new_node = create(flag, place, isext, isent, NULL);
 	cursor->next = new_node;
 }
 
-sign_table_ptr* create(char * flag, int DC, int isext, int iscode, sign_table_ptr* next)
+sign_table_ptr* create(char * flag, int DC, int isext, int isent, sign_table_ptr* next)
 {
 	sign_table_ptr* new_node = (sign_table_ptr*)malloc(sizeof(sign_table_ptr));
 	size_t length;
@@ -55,11 +55,11 @@ sign_table_ptr* create(char * flag, int DC, int isext, int iscode, sign_table_pt
 		printf("Unable to allocate memory");
 		exit(0);
 	}
-#pragma warning(suppress : 4996)
+	#pragma warning(suppress : 4996)
 	strcpy(new_node->sign, flag);
 	new_node->place = DC;
 	new_node->isext = isext;
-	new_node->iscode = iscode;
+	new_node->isent = isent;
 	new_node->next = next;
 
 	return new_node;
@@ -76,6 +76,41 @@ int search_sign(sign_table_ptr *head, char *sign) {
 	while (ptr != NULL) {
 		if (strcmp(ptr->sign, sign) == 0) {
 			return 1;
+		}
+		ptr = ptr->next;
+	}
+	return 0;
+}
+
+int mark_entry(sign_table_ptr *head, char *sign) {
+	sign_table_ptr *ptr = head;
+	if (ptr->sign == NULL || strcmp(ptr->sign, sign) == 0) {
+		return 0;
+	}
+	else {
+		ptr = ptr->next;
+	}
+	while (ptr != NULL) {
+		if (strcmp(ptr->sign, sign) == 0) {
+			ptr->isent = 1;
+			return 1;
+		}
+		ptr = ptr->next;
+	}
+	return 0;
+}
+
+int sign_place(sign_table_ptr *head, char *sign) {
+	sign_table_ptr *ptr = head;
+	if (ptr->sign == NULL || strcmp(ptr->sign, sign) == 0) {
+		return 0;
+	}
+	else {
+		ptr = ptr->next;
+	}
+	while (ptr != NULL) {
+		if (strcmp(ptr->sign, sign) == 0) {
+			return ptr->place;
 		}
 		ptr = ptr->next;
 	}
