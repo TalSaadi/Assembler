@@ -8,7 +8,7 @@
 #include "Memory.h"
 #include "ArgsEncoder.h"
 #include "SignTable.h"
-#include "Encoding.h"
+#include "Analasys.h"
 #include "StringsProcess.h"
 
 #define WORD_SIZE 13
@@ -141,19 +141,22 @@ machine_code_type first_process(char *line, int IC, int DC, sign_table_ptr * sig
 			}
 			#pragma warning(suppress : 4996)
 			line = strtok(NULL, " ");
-			if (line != NULL) {
-				if (search_sign(sign_head, line)) {
-					printf("Sign already found");
-					exit(0);
-				}
-				append(sign_head, flag, DC, 1, 0);
+			while (line != NULL) {
+				append(sign_head, line, -1, 1, 0);
+				#pragma warning(suppress : 4996)
+				line = strtok(NULL, ",");
 			}
+		}
+		else if (strcmp(line, ".entry") == 0) {
+			machine_code.machine_code = NULL;
+			return machine_code;
 		}
 		else {
 			if (found_flag) {
 				append(sign_head, flag, IC, 0, 0);
 			}
 			#pragma warning(suppress : 4996)
+			clear_args(line);
 			op = search_code(line);
 			if (op == NULL) {
 				printf("Code wasn't found");

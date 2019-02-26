@@ -143,17 +143,19 @@
     <ClInclude Include="DataTypes.h" />
     <ClInclude Include="FirstProcess.h" />
     <ClInclude Include="Memory.h" />
+    <ClInclude Include="OutputFiles.h" />
     <ClInclude Include="Reader.h" />
     <ClInclude Include="SecondProcess.h" />
     <ClInclude Include="StringsProcess.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ArgsEncoder.c" />
-    <ClCompile Include="Encoding.c" />
-    <ClCompile Include="Encoding.h" />
+    <ClCompile Include="Analasys.c" />
+    <ClCompile Include="Analasys.h" />
     <ClCompile Include="FirstProcess.c" />
     <ClCompile Include="Main.c" />
     <ClCompile Include="Memory.c" />
+    <ClCompile Include="OutputFiles.c" />
     <ClCompile Include="Reader.c" />
     <ClCompile Include="SecondProcess.c" />
     <ClCompile Include="SignTable.c" />

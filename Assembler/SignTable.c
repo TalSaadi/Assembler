@@ -8,11 +8,12 @@
 #include "Memory.h"
 #include "ArgsEncoder.h"
 #include "SignTable.h"
-#include "Encoding.h"
+#include "Analasys.h"
 #include "StringsProcess.h"
 
 void append(sign_table_ptr* head, char * flag, int place, int isext, int isent)
 {
+	clear_args(flag);
 	/* go to the last node */
 	sign_table_ptr *cursor = head;
 	sign_table_ptr* new_node;

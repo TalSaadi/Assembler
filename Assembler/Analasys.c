@@ -8,7 +8,7 @@
 #include "Memory.h"
 #include "ArgsEncoder.h"
 #include "SignTable.h"
-#include "Encoding.h"
+#include "Analasys.h"
 #include "StringsProcess.h"
 
 #define OPCODE_LENGTH 16
@@ -27,6 +27,7 @@ char * search_code(char * code) {
 }
 
 address_mode analyze_arguments(char * code, char * arguments) {
+	char *args;
 	address_mode mode;
 	#pragma warning(suppress : 4996)
 	if (strcmp(code, "mov") == 0 || strcmp(code, "add") == 0 || strcmp(code, "sub") == 0) {
@@ -123,6 +124,7 @@ address_mode analyze_arguments(char * code, char * arguments) {
 			exit(0);
 		}
 		else {
+			mode.first_mode = "000";
 			clear_args(mode.second_arg);
 			mode.second_mode = check_address_code(mode.second_arg);
 			if (strcmp(mode.second_mode, "001") == 0) {
@@ -145,13 +147,21 @@ address_mode analyze_arguments(char * code, char * arguments) {
 			exit(0);
 		}
 		else {
+			mode.first_mode = "000";
 			clear_args(mode.second_arg);
 			mode.second_mode = check_address_code(mode.second_arg);
 			return mode;
 		}
 	}
 	else if (strcmp(code, "rts") == 0 || strcmp(code, "stop") == 0) {
-		if (arguments != NULL || !is_empty(arguments)) {
+		#pragma warning(suppress : 4996)
+		args = strtok(NULL, " ");
+		if (args == NULL || is_empty(args)) {
+			mode.first_mode = "000";
+			mode.second_mode = "000";
+			return mode;
+		}
+		else {
 			printf("Too much args");
 			exit(0);
 		}
@@ -184,7 +194,7 @@ int check_address_code(char * argument) {
 			printf("Not a valid argument");
 			exit(0);
 		}
-		for (i = 0; i < strlen(argument); i++) {
+		for (i = 1; i < strlen(argument); i++) {
 			if (!isdigit(*(argument + i))) {
 				printf("Not a valid argument");
 				exit(0);
@@ -195,8 +205,8 @@ int check_address_code(char * argument) {
 }
 
 int address_data(machine_code_type * machine_code, address_mode mode) {
-	if (mode.first_arg == NULL) {
-		if (mode.second_mode == NULL) {
+	if (strcmp(mode.first_mode, "000") == 0) {
+		if (strcmp(mode.second_mode, "000") == 0) {
 			return 0;
 		}
 		else if (strcmp(mode.second_mode, "001") == 0) {
@@ -227,14 +237,14 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 			return 1;
 		}
 	}
-	else if (strcmp(mode.first_arg, "001") == 0) {
+	else if (strcmp(mode.first_mode, "001") == 0) {
 		machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
 		if (machine_code->machine_code == NULL) {
 			printf("Unable to allocate memory");
 			exit(0);
 		}
 		encode_number(machine_code, mode.first_arg, 1);
-		if (mode.second_mode == NULL) {
+		if (strcmp(mode.second_mode, "000") == 0) {
 			return 1;
 		}
 		else if (strcmp(mode.second_mode, "001") == 0) {
@@ -272,7 +282,7 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 			exit(0);
 		}
 		encode_sign(machine_code, 1);
-		if (mode.second_mode == NULL) {
+		if (strcmp(mode.second_mode, "000") == 0) {
 			return 1;
 		}
 		else if (strcmp(mode.second_mode, "001") == 0) {
@@ -304,7 +314,7 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		}
 	}
 	else if (strcmp(mode.first_mode, "101") == 0) {
-		if (mode.second_mode == NULL) {
+		if (strcmp(mode.second_mode, "000") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
 				printf("Unable to allocate memory");
@@ -353,8 +363,8 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 
 int address_data_second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], address_mode mode, sign_table_ptr * sign_head, int IC) {
 	int sign_index, i;
-	if (mode.first_arg == NULL) {
-		if (mode.second_mode == NULL) {
+	if (strcmp(mode.first_mode, "000") == 0) {
+		if (strcmp(mode.second_mode, "000") == 0) {
 			return 0;
 		}
 		else if (strcmp(mode.second_mode, "011") == 0) {
@@ -371,9 +381,9 @@ int address_data_second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], addre
 			return 1;
 		}
 	}
-	else if (strcmp(mode.first_arg, "001") == 0) {
+	else if (strcmp(mode.first_mode, "001") == 0) {
 		IC++;
-		if (mode.second_mode == NULL) {
+		if (strcmp(mode.second_mode, "000") == 0) {
 			return 1;
 		}
 		else if (strcmp(mode.second_mode, "011") == 0) {
@@ -399,7 +409,7 @@ int address_data_second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], addre
 		}
 		Instructions[IC][12] = '\0';
 		IC++;
-		if (mode.second_mode == NULL) {
+		if (strcmp(mode.second_mode, "000") == 0) {
 			return 1;
 		}
 		else if (strcmp(mode.second_mode, "011") == 0) {
@@ -418,7 +428,7 @@ int address_data_second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], addre
 	}
 	else if (strcmp(mode.first_mode, "101") == 0) {
 		IC++;
-		if (mode.second_mode == NULL) {
+		if (strcmp(mode.second_mode, "000") == 0) {
 			return 1;
 		}
 		else if (strcmp(mode.second_mode, "101") == 0) {

@@ -8,10 +8,13 @@
 #include "Memory.h"
 #include "ArgsEncoder.h"
 #include "SignTable.h"
-#include "Encoding.h"
+#include "Analasys.h"
 #include "StringsProcess.h"
 
 #define WORD_SIZE 13
+#define LETTER 6
+
+const char b64chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 void encode_number(machine_code_type * machine_code, char * arg, int line) {
 	int num, i;
@@ -84,4 +87,44 @@ void encode_sign(machine_code_type *machine_code, int line) {
 		machine_code->machine_code[line][i] = '?';
 	}
 	machine_code->machine_code[line][12] = '\0';
+}
+
+char *b64_encode(char *line) {
+	char firstletter[LETTER], b64[3];	
+	char *secondletter;
+	int num1, num2, firstbin, secondbin;
+
+	memset(firstletter, '\0', sizeof(firstletter));
+	#pragma warning(suppress : 4996)
+	strncpy(firstletter, line, LETTER);
+	secondletter = line + LETTER;
+	num1 = atoi(firstletter);
+	num2 = atoi(secondletter);
+	firstbin = binaryToDecimal(num1);
+	secondbin = binaryToDecimal(num2);
+	b64[0] = b64chars[firstbin];
+	b64[1] = b64chars[secondbin];
+	b64[2] = '\0';
+	#pragma warning(suppress : 4996)
+	return b64;
+}
+
+int binaryToDecimal(int n)
+{
+	int num = n;
+	int dec_value = 0;
+
+	// Initializing base value to 1, i.e 2^0 
+	int base = 1;
+
+	int temp = num;
+	while (temp)
+	{
+		int last_digit = temp % 10;
+		temp = temp / 10;
+		dec_value += last_digit * base;
+		base = base * 2;
+	}
+
+	return dec_value;
 }

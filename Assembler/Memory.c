@@ -8,7 +8,7 @@
 #include "Memory.h"
 #include "ArgsEncoder.h"
 #include "SignTable.h"
-#include "Encoding.h"
+#include "Analasys.h"
 #include "StringsProcess.h"
 
 void free_array(char **a, int m) {

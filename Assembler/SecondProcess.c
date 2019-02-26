@@ -8,10 +8,10 @@
 #include "Memory.h"
 #include "ArgsEncoder.h"
 #include "SignTable.h"
-#include "Encoding.h"
+#include "Analasys.h"
 #include "StringsProcess.h"
 
-int second_process(char *Instruction, char *line, sign_table_ptr * sign_head, int IC) {
+int second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], char *line, sign_table_ptr * sign_head, int IC) {
 	char * sign, * code;
 	address_mode mode;
 	if (is_empty(line)) {
@@ -32,6 +32,7 @@ int second_process(char *Instruction, char *line, sign_table_ptr * sign_head, in
 	else if (strcmp(line, ".entry") == 0) {
 		#pragma warning(suppress : 4996)
 		sign = strtok(NULL, " ");
+		clear_args(sign);
 		if (sign == NULL) {
 			printf("Not enough args");
 			exit(0);
@@ -40,7 +41,7 @@ int second_process(char *Instruction, char *line, sign_table_ptr * sign_head, in
 			printf("Not a legal sign");
 			exit(0);
 		}
-		if (!mark_entry(sign_head, line)) {
+		if (!mark_entry(sign_head, sign)) {
 			printf("Sign wasn't found");
 			exit(0);
 		}
@@ -49,10 +50,11 @@ int second_process(char *Instruction, char *line, sign_table_ptr * sign_head, in
 		}
 	}
 	else {
+		clear_args(line);
 		code = line;
 		mode = analyze_arguments(code, line);
 		IC++;
-		IC += address_data_second_process((char*)Instruction, mode, sign_head, IC);
+		IC += address_data_second_process((char*)Instructions, mode, sign_head, IC);
 	}
 	return IC;
 }

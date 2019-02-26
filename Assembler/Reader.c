@@ -8,8 +8,10 @@
 #include "Memory.h"
 #include "ArgsEncoder.h"
 #include "SignTable.h"
-#include "Encoding.h"
+#include "Analasys.h"
 #include "StringsProcess.h"
+#include "OutputFiles.h"
+#include "SecondProcess.h"
 
 #define MAX_LINE_SIZE 80
 #define MEMORY_SIZE 1024
@@ -18,6 +20,7 @@
 
 void read(char filename[])
 {
+	char * asfilename;
 	char line[MAX_LINE_SIZE];
 	FILE *file;
 	error * errors = NULL;
@@ -28,8 +31,11 @@ void read(char filename[])
 	char Data[MEMORY_SIZE][WORD_SIZE];
 	sign_table_ptr sign_head;
 	sign_head.sign = NULL;
+	asfilename = malloc(strlen(filename) * sizeof(char));
 	#pragma warning(suppress : 4996)
-	file = fopen(strcat(filename, ".as"), "r");
+	strcpy(asfilename, filename);
+	#pragma warning(suppress : 4996)
+	file = fopen(strcat(asfilename, ".as"), "r");
 	/* First Process */
 	if (file) {
 		while (fgets(line, MAX_LINE_SIZE, file) != NULL) {
@@ -67,13 +73,14 @@ void read(char filename[])
 
 	int Second_IC = 0;
 	#pragma warning(suppress : 4996)
-	file = fopen(filename, "r");
+	file = fopen(asfilename, "r");
 	/* Second Process */
 	if (file) {
 		while (fgets(line, MAX_LINE_SIZE, file) != NULL) {
-			Second_IC = second_process((char *)Instructions, line, &sign_head, Second_IC);
+			Second_IC = second_process(Instructions, line, &sign_head, Second_IC);
 		}
 	}
-
 	free_sign_table(&sign_head);
+
+	ObjectFile(Instructions, Data, IC, DC, filename);
 }

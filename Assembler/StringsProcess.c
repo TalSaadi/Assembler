@@ -8,7 +8,7 @@
 #include "Memory.h"
 #include "ArgsEncoder.h"
 #include "SignTable.h"
-#include "Encoding.h"
+#include "Analasys.h"
 #include "StringsProcess.h"
 
 int is_empty(char *line) {
@@ -48,7 +48,7 @@ void clear_args(char * arg) {
 	/*** Traverse the given string. If current character
 	is not space, then place it at index 'count++' ***/
 	for (int i = 0; arg[i]; i++)
-		if (arg[i] != ' ' && arg != '\t' && arg[i] != ',' && arg[i] != '\n')
+		if (arg[i] != ' ' && arg != '\t' && arg[i] != ',' && arg[i] != '\n' && arg[i] != ':')
 			arg[count++] = arg[i]; /* here count is incremented */
 	arg[count] = '\0';
 }
