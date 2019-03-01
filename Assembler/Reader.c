@@ -70,7 +70,7 @@ void read(char filename[])
 		printf("File not found\n");
 		return;
 	}
-
+	shift_places(&sign_head, IC);
 	int Second_IC = 0;
 	#pragma warning(suppress : 4996)
 	file = fopen(asfilename, "r");
@@ -79,8 +79,11 @@ void read(char filename[])
 		while (fgets(line, MAX_LINE_SIZE, file) != NULL) {
 			Second_IC = second_process(Instructions, line, &sign_head, Second_IC);
 		}
+
 	}
-	free_sign_table(&sign_head);
 
 	ObjectFile(Instructions, Data, IC, DC, filename);
+	EntriesFile(&sign_head, filename);
+	ExternsFile(&sign_head, filename);
+	free_sign_table(&sign_head);
 }

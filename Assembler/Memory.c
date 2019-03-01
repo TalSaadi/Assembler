@@ -24,5 +24,6 @@ void free_sign_table(sign_table_ptr * head) {
 	while ((curr = head) != NULL) {
 		head = head->next;
 		free(curr->sign);
+		free(curr->references);
 	}
 }

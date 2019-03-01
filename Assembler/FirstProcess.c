@@ -54,7 +54,7 @@ machine_code_type first_process(char *line, int IC, int DC, sign_table_ptr * sig
 		}
 		if (strcmp(line, ".data") == 0) {
 			if (found_flag) {
-				append(sign_head, flag, DC, 0, 0);
+				append(sign_head, flag, DC, 0, 0, 1);
 			}
 			#pragma warning(suppress : 4996)
 			line = strtok(NULL, ",");
@@ -73,13 +73,8 @@ machine_code_type first_process(char *line, int IC, int DC, sign_table_ptr * sig
 					printf("Unable to allocate memory");
 					exit(0);
 				}
-				if (atoi(line) < 0) {
-					num = ~atoi(line) + 1;
-				}
-				else {
-					num = atoi(line);
-				}
-				for (i = 0; i < 12; num = num >> 1, i++) {
+				num = atoi(line);
+				for (i = 11; i >=0; num = num >> 1, i--) {
 					machine_code.machine_code[num_lines][i] = (num & 1) + '0';
 				}
 				machine_code.machine_code[num_lines][12] = '\0';
@@ -91,7 +86,7 @@ machine_code_type first_process(char *line, int IC, int DC, sign_table_ptr * sig
 		}
 		else if (strcmp(line, ".string") == 0) {
 			if (found_flag) {
-				append(sign_head, flag, DC, 0, 0);
+				append(sign_head, flag, DC, 0, 0, 1);
 			}
 			#pragma warning(suppress : 4996)
 			line = strtok(NULL, " ");
@@ -109,7 +104,7 @@ machine_code_type first_process(char *line, int IC, int DC, sign_table_ptr * sig
 						printf("Unable to allocate memory");
 						exit(0);
 					}
-					for (k = 0; k < 12; num = num >> 1, k++) {
+					for (k = 11; k >= 0; num = num >> 1, k--) {
 						machine_code.machine_code[num_lines][k] = (num & 1) + '0';
 					}
 					machine_code.machine_code[num_lines][12] = '\0';
@@ -142,7 +137,7 @@ machine_code_type first_process(char *line, int IC, int DC, sign_table_ptr * sig
 			#pragma warning(suppress : 4996)
 			line = strtok(NULL, " ");
 			while (line != NULL) {
-				append(sign_head, line, -1, 1, 0);
+				append(sign_head, line, -1, 1, 0, 0);
 				#pragma warning(suppress : 4996)
 				line = strtok(NULL, ",");
 			}
@@ -153,7 +148,7 @@ machine_code_type first_process(char *line, int IC, int DC, sign_table_ptr * sig
 		}
 		else {
 			if (found_flag) {
-				append(sign_head, flag, IC, 0, 0);
+				append(sign_head, flag, IC, 0, 0, 0);
 			}
 			#pragma warning(suppress : 4996)
 			clear_args(line);

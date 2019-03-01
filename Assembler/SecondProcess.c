@@ -15,10 +15,10 @@ int second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], char *line, sign_t
 	char * sign, * code;
 	address_mode mode;
 	if (is_empty(line)) {
-		return 0;
+		return IC;
 	}
 	else if (*line == ';') {
-		return 0;
+		return IC;
 	}
 	#pragma warning(suppress : 4996)
 	line = strtok(line, " ");
@@ -27,7 +27,7 @@ int second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], char *line, sign_t
 		line = strtok(NULL, " ");
 	}
 	if ((strcmp(line, ".data") == 0) || (strcmp(line, ".string") == 0) || (strcmp(line, ".extern") == 0)) {
-		return;
+		return IC;
 	}
 	else if (strcmp(line, ".entry") == 0) {
 		#pragma warning(suppress : 4996)
@@ -46,7 +46,7 @@ int second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], char *line, sign_t
 			exit(0);
 		}
 		else {
-			return;
+			return IC;
 		}
 	}
 	else {

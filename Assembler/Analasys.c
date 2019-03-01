@@ -369,9 +369,16 @@ int address_data_second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], addre
 		}
 		else if (strcmp(mode.second_mode, "011") == 0) {
 			sign_index = sign_place(sign_head, mode.second_arg);
-			Instructions[IC][0] = '0';
-			Instructions[IC][1] = '0';
-			for (i = 2; i < 12; sign_index = sign_index >> 1, i++) {
+			if (sign_index == 0) {
+				Instructions[IC][10] = '0';
+				Instructions[IC][11] = '1';
+				mark_extern(sign_head, mode.second_arg, IC);
+			}
+			else {
+				Instructions[IC][10] = '1';
+				Instructions[IC][11] = '0';
+			}
+			for (i = 9; i >= 0; sign_index = sign_index >> 1, i--) {
 				Instructions[IC][i] = (sign_index & 1) + '0';
 			}
 			Instructions[IC][12] = '\0';
@@ -388,9 +395,16 @@ int address_data_second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], addre
 		}
 		else if (strcmp(mode.second_mode, "011") == 0) {
 			sign_index = sign_place(sign_head, mode.second_arg);
-			Instructions[IC][0] = '0';
-			Instructions[IC][1] = '0';
-			for (i = 2; i < 12; sign_index = sign_index >> 1, i++) {
+			if (sign_index == 0) {
+				Instructions[IC][10] = '0';
+				Instructions[IC][11] = '1';
+				mark_extern(sign_head, mode.second_arg, IC);
+			}
+			else {
+				Instructions[IC][10] = '1';
+				Instructions[IC][11] = '0';
+			}
+			for (i = 9; i >= 0; sign_index = sign_index >> 1, i--) {
 				Instructions[IC][i] = (sign_index & 1) + '0';
 			}
 			Instructions[IC][12] = '\0';
@@ -402,9 +416,16 @@ int address_data_second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], addre
 	}
 	else if (strcmp(mode.first_mode, "011") == 0) {
 		sign_index = sign_place(sign_head, mode.first_arg);
-		Instructions[IC][0] = '0';
-		Instructions[IC][1] = '0';
-		for (i = 2; i < 12; sign_index = sign_index >> 1, i++) {
+		if (sign_index == 0) {
+			Instructions[IC][10] = '0';
+			Instructions[IC][11] = '1';
+			mark_extern(sign_head, mode.first_arg, IC);
+		}
+		else {
+			Instructions[IC][10] = '1';
+			Instructions[IC][11] = '0';
+		}
+		for (i = 9; i >= 0; sign_index = sign_index >> 1, i--) {
 			Instructions[IC][i] = (sign_index & 1) + '0';
 		}
 		Instructions[IC][12] = '\0';
@@ -414,9 +435,16 @@ int address_data_second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], addre
 		}
 		else if (strcmp(mode.second_mode, "011") == 0) {
 			sign_index = sign_place(sign_head, mode.second_arg);
-			Instructions[IC][0] = '0';
-			Instructions[IC][1] = '0';
-			for (i = 2; i < 12; sign_index = sign_index >> 1, i++) {
+			if (sign_index == 0) {
+				Instructions[IC][10] = '0';
+				Instructions[IC][11] = '1';
+				mark_extern(sign_head, mode.second_arg, IC);
+			}
+			else {
+				Instructions[IC][10] = '1';
+				Instructions[IC][11] = '0';
+			}
+			for (i = 9; i >= 0; sign_index = sign_index >> 1, i--) {
 				Instructions[IC][i] = (sign_index & 1) + '0';
 			}
 			Instructions[IC][12] = '\0';
@@ -440,9 +468,16 @@ int address_data_second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], addre
 			}
 			else if (strcmp(mode.second_mode, "011") == 0) {
 				sign_index = sign_place(sign_head, mode.second_arg);
-				Instructions[IC][0] = '0';
-				Instructions[IC][1] = '0';
-				for (i = 2; i < 12; sign_index = sign_index >> 1, i++) {
+				if (sign_index == 0) {
+					Instructions[IC][10] = '0';
+					Instructions[IC][11] = '1';
+					mark_extern(sign_head, mode.second_arg, IC);
+				}
+				else {
+					Instructions[IC][10] = '1';
+					Instructions[IC][11] = '0';
+				}
+				for (i = 9; i >= 0; sign_index = sign_index >> 1, i--) {
 					Instructions[IC][i] = (sign_index & 1) + '0';
 				}
 				Instructions[IC][12] = '\0';

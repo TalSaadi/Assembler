@@ -35,3 +35,69 @@ void ObjectFile(char Instructions[MEMORY_SIZE][WORD_SIZE], char Data[MEMORY_SIZE
 	}
 	fclose(fp);
 }
+
+void EntriesFile(sign_table_ptr * sign_head, char * filename) {
+	int found_ent = 0;
+	FILE *fp;
+	char *outputname;
+	outputname = malloc(strlen(filename) * sizeof(char));
+	#pragma warning(suppress : 4996)
+	strcpy(outputname, filename);
+	#pragma warning(suppress : 4996)
+	fp = fopen(strcat(outputname, ".ent"), "w");
+	sign_table_ptr *ptr = sign_head;
+	if (ptr->sign == NULL) {
+		fclose(fp);
+	}
+	else {
+		while (ptr != NULL) {
+			if (ptr->isent) {
+				fprintf(fp, "%s %d\n", ptr->sign, ptr->place);
+			}
+			ptr = ptr->next;
+		}
+		fclose(fp);
+	}
+	if (!found_ent) {
+		if (remove(outputname) == 0)
+			printf("Deleted successfully");
+		else {
+			printf("Unable to delete the file");
+			exit(0);
+		}
+	}
+}
+
+void ExternsFile(sign_table_ptr * sign_head, char *filename) {
+	int i, found_ext = 0;
+	FILE *fp;
+	char *outputname;
+	outputname = malloc(strlen(filename) * sizeof(char));
+	#pragma warning(suppress : 4996)
+	strcpy(outputname, filename);
+	#pragma warning(suppress : 4996)
+	fp = fopen(strcat(outputname, ".ext"), "w");
+	sign_table_ptr *ptr = sign_head;
+	if (ptr->sign == NULL) {
+		fclose(fp);
+	}
+	else {
+		while (ptr != NULL) {
+			if (ptr->isext) {
+				for (i = 0; i < ptr->num_ref; i++) {
+					fprintf(fp, "%s %d\n", ptr->sign, *(ptr->references + i));
+				}
+			}
+			ptr = ptr->next;
+		}
+		fclose(fp);
+	}
+	if (!found_ext) {
+		if (remove(outputname) == 0)
+			printf("Deleted successfully");
+		else {
+			printf("Unable to delete the file");
+			exit(0);
+		}
+	}
+}
