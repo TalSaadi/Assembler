@@ -40,11 +40,11 @@ address_mode analyze_arguments(char * code, char * arguments) {
 		mode.second_arg = strtok(NULL, ",");
 		#pragma warning(suppress : 4996)
 		if (strtok(NULL, ",") != NULL) {
-			printf("Too much args");
+			printf("Too much args\n");
 			exit(0);
 		}
 		if (mode.first_arg == NULL || mode.second_arg == NULL) {
-			printf("Not enuogh args");
+			printf("Not enuogh args\n");
 			exit(0);
 		}
 		else {
@@ -53,7 +53,7 @@ address_mode analyze_arguments(char * code, char * arguments) {
 			clear_args(mode.second_arg);
 			mode.second_mode = check_address_code(mode.second_arg);
 			if (strcmp(mode.second_mode, "001") == 0) {
-				printf("Invalid mode");
+				printf("Invalid mode\n");
 				exit(0);
 			}
 			else {
@@ -68,11 +68,11 @@ address_mode analyze_arguments(char * code, char * arguments) {
 		mode.second_arg = strtok(NULL, ",");
 		#pragma warning(suppress : 4996)
 		if (strtok(NULL, ",") != NULL) {
-			printf("Too much args");
+			printf("Too much args\n");
 			exit(0);
 		}
 		if (mode.first_arg == NULL || mode.second_arg == NULL) {
-			printf("Not enuogh args");
+			printf("Not enuogh args\n");
 			exit(0);
 		}
 		else {
@@ -90,11 +90,11 @@ address_mode analyze_arguments(char * code, char * arguments) {
 		mode.second_arg = strtok(NULL, ",");
 		#pragma warning(suppress : 4996)
 		if (strtok(NULL, ",") != NULL) {
-			printf("Too much args");
+			printf("Too much args\n");
 			exit(0);
 		}
 		if (mode.first_arg == NULL || mode.second_arg == NULL) {
-			printf("Not enuogh args");
+			printf("Not enuogh args\n");
 			exit(0);
 		}
 		else {
@@ -103,10 +103,10 @@ address_mode analyze_arguments(char * code, char * arguments) {
 			clear_args(mode.second_arg);
 			mode.second_mode = check_address_code(mode.second_arg);
 			if (strcmp(mode.first_mode, "011") != 0) {
-				printf("Invalid mode");
+				printf("Invalid mode\n");
 			}
 			else if (strcmp(mode.second_mode, "001") == 0) {
-				printf("Invalid mode");
+				printf("Invalid mode\n");
 				exit(0);
 			}
 			else {
@@ -119,11 +119,11 @@ address_mode analyze_arguments(char * code, char * arguments) {
 		mode.second_arg = strtok(NULL, " ");
 		#pragma warning(suppress : 4996)
 		if (strtok(NULL, ",") != NULL) {
-			printf("Too much args");
+			printf("Too much args\n");
 			exit(0);
 		}
 		if (mode.second_arg == NULL) {
-			printf("Not enuogh args");
+			printf("Not enuogh args\n");
 			exit(0);
 		}
 		else {
@@ -131,7 +131,7 @@ address_mode analyze_arguments(char * code, char * arguments) {
 			clear_args(mode.second_arg);
 			mode.second_mode = check_address_code(mode.second_arg);
 			if (strcmp(mode.second_mode, "001") == 0) {
-				printf("Invalid arg");
+				printf("Invalid arg\n");
 				exit(0);
 			}
 			return mode;
@@ -142,11 +142,11 @@ address_mode analyze_arguments(char * code, char * arguments) {
 		mode.second_arg = strtok(NULL, " ");
 		#pragma warning(suppress : 4996)
 		if (strtok(NULL, ",") != NULL) {
-			printf("Too much args");
+			printf("Too much args\n");
 			exit(0);
 		}
 		if (mode.second_arg == NULL) {
-			printf("Not enuogh args");
+			printf("Not enuogh args\n");
 			exit(0);
 		}
 		else {
@@ -165,7 +165,7 @@ address_mode analyze_arguments(char * code, char * arguments) {
 			return mode;
 		}
 		else {
-			printf("Too much args");
+			printf("Too much args\n");
 			exit(0);
 		}
 	}
@@ -178,7 +178,7 @@ int check_address_code(char * argument) {
 			return "101";
 		}
 		else {
-			printf("Not a legal register");
+			printf("Not a legal register\n");
 			exit(0);
 		}
 
@@ -188,18 +188,18 @@ int check_address_code(char * argument) {
 			return "011";
 		}
 		else {
-			printf("Not a legal sign");
+			printf("Not a legal sign\n");
 			exit(0);
 		}
 	}
 	else {
 		if (!isdigit(*(argument)) && *(argument) != '+' && *(argument) != '-') {
-			printf("Not a valid argument");
+			printf("Not a valid argument\n");
 			exit(0);
 		}
 		for (i = 1; i < strlen(argument); i++) {
 			if (!isdigit(*(argument + i))) {
-				printf("Not a valid argument");
+				printf("Not a valid argument\n");
 				exit(0);
 			}
 		}
@@ -215,7 +215,7 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else if (strcmp(mode.second_mode, "001") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory");
+				printf("Unable to allocate memory\n");
 				exit(0);
 			}
 			encode_number(machine_code, mode.second_arg, 1);
@@ -224,7 +224,7 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else if (strcmp(mode.second_mode, "011") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory");
+				printf("Unable to allocate memory\n");
 				exit(0);
 			}
 			encode_sign(machine_code, 1);
@@ -233,7 +233,7 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else if (strcmp(mode.second_mode, "101") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory");
+				printf("Unable to allocate memory\n");
 				exit(0);
 			}
 			encode_reg(machine_code, mode.second_arg, 1);
@@ -243,7 +243,7 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 	else if (strcmp(mode.first_mode, "001") == 0) {
 		machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
 		if (machine_code->machine_code == NULL) {
-			printf("Unable to allocate memory");
+			printf("Unable to allocate memory\n");
 			exit(0);
 		}
 		encode_number(machine_code, mode.first_arg, 1);
@@ -253,7 +253,7 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else if (strcmp(mode.second_mode, "001") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 3 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory");
+				printf("Unable to allocate memory\n");
 				exit(0);
 			}
 			encode_number(machine_code, mode.second_arg, 2);
@@ -262,7 +262,7 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else if (strcmp(mode.second_mode, "011") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 3 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory");
+				printf("Unable to allocate memory\n");
 				exit(0);
 			}
 			encode_sign(machine_code, 2);
@@ -271,7 +271,7 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else if (strcmp(mode.second_mode, "101") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 3 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory");
+				printf("Unable to allocate memory\n");
 				exit(0);
 			}
 			encode_reg(machine_code, mode.second_arg, 2);
@@ -281,7 +281,7 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 	else if (strcmp(mode.first_mode, "011") == 0) {
 		machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
 		if (machine_code->machine_code == NULL) {
-			printf("Unable to allocate memory");
+			printf("Unable to allocate memory\n");
 			exit(0);
 		}
 		encode_sign(machine_code, 1);
@@ -291,7 +291,7 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else if (strcmp(mode.second_mode, "001") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 3 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory");
+				printf("Unable to allocate memory\n");
 				exit(0);
 			}
 			encode_number(machine_code, mode.second_arg, 2);
@@ -300,7 +300,7 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else if (strcmp(mode.second_mode, "011") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 3 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory");
+				printf("Unable to allocate memory\n");
 				exit(0);
 			}
 			encode_sign(machine_code, 2);
@@ -309,7 +309,7 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else if (strcmp(mode.second_mode, "101") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 3 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory");
+				printf("Unable to allocate memory\n");
 				exit(0);
 			}
 			encode_reg(machine_code, mode.second_arg, 2);
@@ -320,7 +320,7 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		if (strcmp(mode.second_mode, "000") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory");
+				printf("Unable to allocate memory\n");
 				exit(0);
 			}
 			encode_reg(machine_code, mode.first_arg, 1);
@@ -329,7 +329,7 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else if (strcmp(mode.second_mode, "101") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory");
+				printf("Unable to allocate memory\n");
 				exit(0);
 			}
 			encode_2_regs(machine_code, mode.first_arg, mode.second_arg, 1);
@@ -338,14 +338,14 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory");
+				printf("Unable to allocate memory\n");
 				exit(0);
 			}
 			encode_reg(machine_code, mode.first_arg, 1);
 			if (strcmp(mode.second_mode, "001") == 0) {
 				machine_code->machine_code = (char **)realloc(machine_code->machine_code, 3 * sizeof(*machine_code->machine_code));
 				if (machine_code->machine_code == NULL) {
-					printf("Unable to allocate memory");
+					printf("Unable to allocate memory\n");
 					exit(0);
 				}
 				encode_number(machine_code, mode.second_arg, 2);
@@ -354,7 +354,7 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 			else if (strcmp(mode.second_mode, "011") == 0) {
 				machine_code->machine_code = (char **)realloc(machine_code->machine_code, 3 * sizeof(*machine_code->machine_code));
 				if (machine_code->machine_code == NULL) {
-					printf("Unable to allocate memory");
+					printf("Unable to allocate memory\n");
 					exit(0);
 				}
 				encode_sign(machine_code, 2);

@@ -11,6 +11,8 @@
 #include "Analasys.h"
 #include "StringsProcess.h"
 
+#define START 100
+
 void append(sign_table_ptr* head, char * flag, int place, int isext, int isent, int isdata)
 {
 	clear_args(flag);
@@ -22,7 +24,7 @@ void append(sign_table_ptr* head, char * flag, int place, int isext, int isent, 
 		length = strlen(flag);
 		head->sign = (char*)malloc(length + 1);
 		if (head->sign == NULL) {
-			printf("Unable to allocate memory");
+			printf("Unable to allocate memory\n");
 			exit(0);
 		}
 		#pragma warning(suppress : 4996)
@@ -56,7 +58,7 @@ sign_table_ptr* create(char * flag, int place, int isext, int isent, int isdata,
 	length = strlen(flag);
 	new_node->sign = (char *)malloc(length + 1);
 	if (new_node->sign == NULL) {
-		printf("Unable to allocate memory");
+		printf("Unable to allocate memory\n");
 		exit(0);
 	}
 	#pragma warning(suppress : 4996)
@@ -131,10 +133,10 @@ void shift_places(sign_table_ptr * head, int IC) {
 		while (ptr != NULL) {
 			if (ptr->place != -1) {
 				if (ptr->isdata) {
-					ptr->place += (IC + 100);
+					ptr->place += (IC + START);
 				}
 				else {
-					ptr->place += 100;
+					ptr->place += START;
 				}
 			}
 			else {
@@ -154,7 +156,7 @@ void mark_extern(sign_table_ptr * head, char * sign, int IC) {
 		while (ptr != NULL) {
 			if (strcmp(ptr->sign, sign) == 0) {
 				ptr->references = (int *)realloc(ptr->references, ++ptr->num_ref * sizeof(int));
-				*(ptr->references + (ptr->num_ref - 1)) = IC + 100;
+				*(ptr->references + (ptr->num_ref - 1)) = IC + START;
 				return;
 			}
 			ptr = ptr->next;

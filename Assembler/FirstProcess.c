@@ -25,25 +25,26 @@ machine_code_type first_process(char *line, int IC, int DC, sign_table_ptr * sig
 		machine_code.machine_code = NULL;
 		return machine_code;
 	}
-	else if (*line == ';') {
+	line = clear_line(line);
+	if (*line == ';') {
 		machine_code.machine_code = NULL;
 		return machine_code;
 	}
 	else {
 		machine_code.machine_code = (char **)realloc(machine_code.machine_code, (num_lines + 1) * sizeof(*machine_code.machine_code));
 		if (machine_code.machine_code == NULL) {
-			printf("Unable to allocate memory");
+			printf("Unable to allocate memory\n");
 			exit(0);
 		}
 		#pragma warning(suppress : 4996)
 		line = strtok(line, " ");
 		if (*(line + (strlen(line) - 1)) == ':') {
 			if (search_sign(sign_head, line)) {
-				printf("Sign already found");
+				printf("Sign already found\n");
 				exit(0);
 			}
 			else if (!legal_sign(line)) {
-				printf("Not a legal sign");
+				printf("Not a legal sign\n");
 				exit(0);
 			}
 			else {
@@ -60,18 +61,18 @@ machine_code_type first_process(char *line, int IC, int DC, sign_table_ptr * sig
 			#pragma warning(suppress : 4996)
 			line = strtok(NULL, ",");
 			if (line == NULL) {
-				printf("No data was found");
+				printf("No data was found\n");
 				exit(0);
 			}
 			while (line != NULL) {
 				machine_code.machine_code = (char **)realloc(machine_code.machine_code, (num_lines + 1) * sizeof(*machine_code.machine_code));
 				if (machine_code.machine_code == NULL) {
-					printf("Unable to allocate memory");
+					printf("Unable to allocate memory\n");
 					exit(0);
 				}
 				machine_code.machine_code[num_lines] = (char*)malloc(WORD_SIZE * sizeof(char));
 				if (machine_code.machine_code[num_lines] == NULL) {
-					printf("Unable to allocate memory");
+					printf("Unable to allocate memory\n");
 					exit(0);
 				}
 				num = atoi(line);
@@ -91,18 +92,19 @@ machine_code_type first_process(char *line, int IC, int DC, sign_table_ptr * sig
 			}
 			#pragma warning(suppress : 4996)
 			line = strtok(NULL, " ");
+			clear_args(line);
 			if ((*line == '"') && (*(line + (strlen(line) - 1)) == '"')) {
 				line++;
 				while (*line != '"') {
 					num = *line;
 					machine_code.machine_code = realloc(machine_code.machine_code, (num_lines + 1) * sizeof(char *));
 					if (machine_code.machine_code == NULL) {
-						printf("Unable to allocate memory");
+						printf("Unable to allocate memory\n");
 						exit(0);
 					}
 					machine_code.machine_code[num_lines] = malloc(WORD_SIZE * sizeof(char));
 					if (machine_code.machine_code[num_lines] == NULL) {
-						printf("Unable to allocate memory");
+						printf("Unable to allocate memory\n");
 						exit(0);
 					}
 					for (k = 11; k >= 0; num = num >> 1, k--) {
@@ -114,12 +116,12 @@ machine_code_type first_process(char *line, int IC, int DC, sign_table_ptr * sig
 				}
 				machine_code.machine_code = realloc(machine_code.machine_code, (num_lines + 1) * sizeof(char *));
 				if (machine_code.machine_code == NULL) {
-					printf("Unable to allocate memory");
+					printf("Unable to allocate memory\n");
 					exit(0);
 				}
 				machine_code.machine_code[num_lines] = malloc(WORD_SIZE * sizeof(char));
 				if (machine_code.machine_code[num_lines] == NULL) {
-					printf("Unable to allocate memory");
+					printf("Unable to allocate memory\n");
 					exit(0);
 				}
 				#pragma warning(suppress : 4996)
@@ -128,12 +130,12 @@ machine_code_type first_process(char *line, int IC, int DC, sign_table_ptr * sig
 				machine_code.isdata = 1;
 			}
 			else {
-				printf("Wrong argument");
+				printf("Wrong argument\n");
 			}
 		}
 		else if (strcmp(line, ".extern") == 0) {
 			if (found_flag) {
-				printf("Warning, found useless sign");
+				printf("Warning, found useless sign\n");
 			}
 			#pragma warning(suppress : 4996)
 			line = strtok(NULL, " ");
@@ -155,12 +157,12 @@ machine_code_type first_process(char *line, int IC, int DC, sign_table_ptr * sig
 			clear_args(line);
 			op = search_code(line);
 			if (op == NULL) {
-				printf("Code wasn't found");
+				printf("Code wasn't found\n");
 				exit(0);
 			}
 			machine_code.machine_code[0] = malloc(WORD_SIZE * sizeof(char));
 			if (machine_code.machine_code[0] == NULL) {
-				printf("Unable to allocate memory");
+				printf("Unable to allocate memory\n");
 				exit(0);
 			}
 			code = line;

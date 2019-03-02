@@ -12,13 +12,14 @@
 #include "StringsProcess.h"
 
 #define WORD_SIZE 13
+#define B64_SIZE 3
 #define MEMORY_SIZE 1024
 
 void ObjectFile(char Instructions[MEMORY_SIZE][WORD_SIZE], char Data[MEMORY_SIZE][WORD_SIZE], int IC, int DC, char * filename) {
 	int i;
 	FILE *fp;
 	char *outputname;
-	char *b64line = malloc(3 * sizeof(char));
+	char *b64line = malloc(B64_SIZE * sizeof(char));
 	outputname = malloc(strlen(filename) * sizeof(char));
 	#pragma warning(suppress : 4996)
 	strcpy(outputname, filename);

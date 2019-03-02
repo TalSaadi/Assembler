@@ -11,6 +11,9 @@
 #include "Analasys.h"
 #include "StringsProcess.h"
 
+#define SIGN_MAX_LENGTH 31
+#define LAST_REG 7
+
 int is_empty(char *line) {
 	while (*line != '\0') {
 		if (!isspace((unsigned char)*line))
@@ -27,7 +30,7 @@ int legal_sign(char *sign) {
 	else if (search_code(sign) != NULL) {
 		return 0;
 	}
-	else if (strLen(sign) > 31) {
+	else if (strLen(sign) > SIGN_MAX_LENGTH) {
 		return 0;
 	}
 	else if (strcmp(sign, ".data") == 0 || strcmp(sign, ".string") == 0 || strcmp(sign, ".extern") == 0 || strcmp(sign, ".entry") == 0) {
@@ -43,7 +46,7 @@ int legal_sign(char *sign) {
 
 int legal_reg(char *reg) {
 	if (*reg == 'r') {
-		if (isdigit(*(reg + 1)) && *(reg + 1) - '0' <= 7) {
+		if (isdigit(*(reg + 1)) && *(reg + 1) - '0' <= LAST_REG) {
 			return 1;
 		}
 	}
@@ -60,6 +63,20 @@ void clear_args(char * arg) {
 		if (arg[i] != ' ' && arg[i] != '\t' && arg[i] != ',' && arg[i] != '\n' && arg[i] != ':')
 			arg[count++] = arg[i]; /* here count is incremented */
 	arg[count] = '\0';
+}
+
+char * clear_line(char * line) {
+	int count = 0;
+
+	while (*line == ' ' || *line == '\t') {
+		line++;
+	}
+
+	for (int i = 0; line[i]; i++)
+		if (line[i] != '\t')
+			line[count++] = line[i]; /* here count is incremented */
+	line[count] = '\0';
+	return line;
 }
 
 int strLen(char *s)

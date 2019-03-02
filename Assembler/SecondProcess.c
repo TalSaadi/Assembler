@@ -17,7 +17,8 @@ int second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], char *line, sign_t
 	if (is_empty(line)) {
 		return IC;
 	}
-	else if (*line == ';') {
+	line = clear_line(line);
+	if (*line == ';') {
 		return IC;
 	}
 	#pragma warning(suppress : 4996)
@@ -34,15 +35,15 @@ int second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], char *line, sign_t
 		sign = strtok(NULL, " ");
 		clear_args(sign);
 		if (sign == NULL) {
-			printf("Not enough args");
+			printf("Not enough args\n");
 			exit(0);
 		}
 		else if (!legal_sign(sign)) {
-			printf("Not a legal sign");
+			printf("Not a legal sign\n");
 			exit(0);
 		}
 		if (!mark_entry(sign_head, sign)) {
-			printf("Sign wasn't found");
+			printf("Sign wasn't found\n");
 			exit(0);
 		}
 		else {
