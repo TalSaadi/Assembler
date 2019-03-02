@@ -24,8 +24,8 @@ void append(sign_table_ptr* head, char * flag, int place, int isext, int isent, 
 		length = strlen(flag);
 		head->sign = (char*)malloc(length + 1);
 		if (head->sign == NULL) {
-			printf("Unable to allocate memory\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 		#pragma warning(suppress : 4996)
 		strcpy(head->sign, flag);
@@ -52,14 +52,14 @@ sign_table_ptr* create(char * flag, int place, int isext, int isent, int isdata,
 	size_t length;
 	if (new_node == NULL)
 	{
-		printf("Error creating a new node.\n");
-		exit(0);
+		printf("Error in file: %s, line number %d, Error creating a new node.\n", globalFileName, globalLineNum);
+		error_found = 1;
 	}
 	length = strlen(flag);
 	new_node->sign = (char *)malloc(length + 1);
 	if (new_node->sign == NULL) {
-		printf("Unable to allocate memory\n");
-		exit(0);
+		printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+		error_found = 1;
 	}
 	#pragma warning(suppress : 4996)
 	strcpy(new_node->sign, flag);

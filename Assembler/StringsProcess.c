@@ -87,6 +87,6 @@ int strLen(char *s)
 	{
 		p++;  /* increase the address until the end */
 	}
-	length = p - s;
-	return length; /* Subtract the two addresses, end - start */
+	length = p - s; /* Subtract the two addresses, end - start */
+	return length; 
 }

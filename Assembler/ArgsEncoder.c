@@ -23,8 +23,8 @@ void encode_number(machine_code_type * machine_code, char * arg, int line) {
 	int num, i;
 	machine_code->machine_code[line] = malloc(WORD_SIZE * sizeof(char));
 	if (machine_code->machine_code[line] == NULL) {
-		printf("Unable to allocate memory\n");
-		exit(0);
+		printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+		error_found = 1;
 	}
 	num = atoi(arg);
 	machine_code->machine_code[line][ARE1] = '0';
@@ -39,8 +39,8 @@ void encode_reg(machine_code_type * machine_code, char * reg, int line) {
 	int num, i;
 	machine_code->machine_code[line] = malloc(WORD_SIZE * sizeof(char));
 	if (machine_code->machine_code[line] == NULL) {
-		printf("Unable to allocate memory\n");
-		exit(0);
+		printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+		error_found = 1;
 	}
 	num = reg[2] - '0';
 	for (i = 4; i >= 0; num = num >> 1, i--) {
@@ -55,11 +55,12 @@ void encode_reg(machine_code_type * machine_code, char * reg, int line) {
 }
 
 void encode_2_regs(machine_code_type * machine_code, char * reg1, char * reg2) {
+	/* Encode two regs to one line */
 	int num, i;
 	machine_code->machine_code[1] = malloc(WORD_SIZE * sizeof(char));
 	if (machine_code->machine_code[1] == NULL) {
-		printf("Unable to allocate memory\n");
-		exit(0);
+		printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+		error_found = 1;
 	}
 	num = reg1[2] - '0';
 	for (i = 4; i >= 0; num = num >> 1, i--) {
@@ -75,11 +76,12 @@ void encode_2_regs(machine_code_type * machine_code, char * reg1, char * reg2) {
 }
 
 void encode_sign(machine_code_type *machine_code, int line) {
+	/* Encode sign as unknown machine code line (line of ?) */
 	int i;
 	machine_code->machine_code[line] = malloc(WORD_SIZE * sizeof(char));
 	if (machine_code->machine_code[line] == NULL) {
-		printf("Unable to allocate memory\n");
-		exit(0);
+		printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+		error_found = 1;
 	}
 	for (i = 0; i < 12; i++) {
 		machine_code->machine_code[line][i] = '?';
@@ -88,6 +90,7 @@ void encode_sign(machine_code_type *machine_code, int line) {
 }
 
 char *b64_encode(char *line) {
+	/* Encode machine code line to base 64 */
 	char firstletter[LETTER], b64[3];	
 	char *secondletter;
 	int num1, num2, firstbin, secondbin;

@@ -4,7 +4,7 @@
 int main(int argc, char *argv[]) {
 	int i;
 	if (argc == 1) {
-		printf("No arguments found\n");
+		printf("Error in file: %s, line number %d, No arguments found\n", globalFileName, globalLineNum);
 		return -1;
 	}
 	else {

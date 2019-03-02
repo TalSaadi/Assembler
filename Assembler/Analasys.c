@@ -30,6 +30,9 @@ char * search_code(char * code) {
 }
 
 address_mode analyze_arguments(char * code, char * arguments) {
+	/*** This function checks which command was operated and
+		 checks arguments to see if there is right amound of
+		 operands and if operands are valid ***/
 	char *args;
 	address_mode mode;
 	#pragma warning(suppress : 4996)
@@ -40,12 +43,12 @@ address_mode analyze_arguments(char * code, char * arguments) {
 		mode.second_arg = strtok(NULL, ",");
 		#pragma warning(suppress : 4996)
 		if (strtok(NULL, ",") != NULL) {
-			printf("Too much args\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Too much args\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 		if (mode.first_arg == NULL || mode.second_arg == NULL) {
-			printf("Not enuogh args\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Not enuogh args\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 		else {
 			clear_args(mode.first_arg);
@@ -53,8 +56,8 @@ address_mode analyze_arguments(char * code, char * arguments) {
 			clear_args(mode.second_arg);
 			mode.second_mode = check_address_code(mode.second_arg);
 			if (strcmp(mode.second_mode, "001") == 0) {
-				printf("Invalid mode\n");
-				exit(0);
+				printf("Error in file: %s, line number %d, Invalid mode\n", globalFileName, globalLineNum);
+				error_found = 1;
 			}
 			else {
 				return mode;
@@ -68,12 +71,12 @@ address_mode analyze_arguments(char * code, char * arguments) {
 		mode.second_arg = strtok(NULL, ",");
 		#pragma warning(suppress : 4996)
 		if (strtok(NULL, ",") != NULL) {
-			printf("Too much args\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Too much args\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 		if (mode.first_arg == NULL || mode.second_arg == NULL) {
-			printf("Not enuogh args\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Not enuogh args\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 		else {
 			clear_args(mode.first_arg);
@@ -90,12 +93,12 @@ address_mode analyze_arguments(char * code, char * arguments) {
 		mode.second_arg = strtok(NULL, ",");
 		#pragma warning(suppress : 4996)
 		if (strtok(NULL, ",") != NULL) {
-			printf("Too much args\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Too much args\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 		if (mode.first_arg == NULL || mode.second_arg == NULL) {
-			printf("Not enuogh args\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Not enuogh args\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 		else {
 			clear_args(mode.first_arg);
@@ -103,11 +106,11 @@ address_mode analyze_arguments(char * code, char * arguments) {
 			clear_args(mode.second_arg);
 			mode.second_mode = check_address_code(mode.second_arg);
 			if (strcmp(mode.first_mode, "011") != 0) {
-				printf("Invalid mode\n");
+				printf("Error in file: %s, line number %d, Invalid mode\n", globalFileName, globalLineNum);
 			}
 			else if (strcmp(mode.second_mode, "001") == 0) {
-				printf("Invalid mode\n");
-				exit(0);
+				printf("Error in file: %s, line number %d, Invalid mode\n", globalFileName, globalLineNum);
+				error_found = 1;
 			}
 			else {
 				return mode;
@@ -119,20 +122,20 @@ address_mode analyze_arguments(char * code, char * arguments) {
 		mode.second_arg = strtok(NULL, " ");
 		#pragma warning(suppress : 4996)
 		if (strtok(NULL, ",") != NULL) {
-			printf("Too much args\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Too much args\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 		if (mode.second_arg == NULL) {
-			printf("Not enuogh args\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Not enuogh args\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 		else {
 			mode.first_mode = "000";
 			clear_args(mode.second_arg);
 			mode.second_mode = check_address_code(mode.second_arg);
 			if (strcmp(mode.second_mode, "001") == 0) {
-				printf("Invalid arg\n");
-				exit(0);
+				printf("Error in file: %s, line number %d, Invalid arg\n", globalFileName, globalLineNum);
+				error_found = 1;
 			}
 			return mode;
 		}
@@ -142,12 +145,12 @@ address_mode analyze_arguments(char * code, char * arguments) {
 		mode.second_arg = strtok(NULL, " ");
 		#pragma warning(suppress : 4996)
 		if (strtok(NULL, ",") != NULL) {
-			printf("Too much args\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Too much args\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 		if (mode.second_arg == NULL) {
-			printf("Not enuogh args\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Not enuogh args\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 		else {
 			mode.first_mode = "000";
@@ -165,42 +168,43 @@ address_mode analyze_arguments(char * code, char * arguments) {
 			return mode;
 		}
 		else {
-			printf("Too much args\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Too much args\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 	}
 }
 
 int check_address_code(char * argument) {
+	/* This function gets an operand, checks if it valid and determines his address code */
 	int i;
-	if (*argument == '@') {
+	if (*argument == '@') { /* Register */
 		if (legal_reg(argument + 1)) {
 			return "101";
 		}
 		else {
-			printf("Not a legal register\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Not a legal register\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 
 	}
-	else if (isalpha(*argument)) {
+	else if (isalpha(*argument)) { /* Sign */
 		if (legal_sign(argument)) {
 			return "011";
 		}
 		else {
-			printf("Not a legal sign\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Not a legal sign\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 	}
-	else {
+	else { /* Number */
 		if (!isdigit(*(argument)) && *(argument) != '+' && *(argument) != '-') {
-			printf("Not a valid argument\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Not a valid argument\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 		for (i = 1; i < strlen(argument); i++) {
 			if (!isdigit(*(argument + i))) {
-				printf("Not a valid argument\n");
-				exit(0);
+				printf("Error in file: %s, line number %d, Not a valid argument\n", globalFileName, globalLineNum);
+				error_found = 1;
 			}
 		}
 		return "001";
@@ -208,33 +212,34 @@ int check_address_code(char * argument) {
 }
 
 int address_data(machine_code_type * machine_code, address_mode mode) {
-	if (strcmp(mode.first_mode, "000") == 0) {
+	/* This funcion encode the data to machine code with the address codes that were found */
+	if (strcmp(mode.first_mode, "000") == 0) { /* Empty operand */
 		if (strcmp(mode.second_mode, "000") == 0) {
 			return 0;
 		}
-		else if (strcmp(mode.second_mode, "001") == 0) {
+		else if (strcmp(mode.second_mode, "001") == 0) { /* Mode 1*/
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory\n");
-				exit(0);
+				printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+				error_found = 1;
 			}
 			encode_number(machine_code, mode.second_arg, 1);
 			return 1;
 		}
-		else if (strcmp(mode.second_mode, "011") == 0) {
+		else if (strcmp(mode.second_mode, "011") == 0) { /* Mode 3*/
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory\n");
-				exit(0);
+				printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+				error_found = 1;
 			}
 			encode_sign(machine_code, 1);
 			return 1;
 		}
-		else if (strcmp(mode.second_mode, "101") == 0) {
+		else if (strcmp(mode.second_mode, "101") == 0) { /* Mode 5*/
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory\n");
-				exit(0);
+				printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+				error_found = 1;
 			}
 			encode_reg(machine_code, mode.second_arg, 1);
 			return 1;
@@ -243,8 +248,8 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 	else if (strcmp(mode.first_mode, "001") == 0) {
 		machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
 		if (machine_code->machine_code == NULL) {
-			printf("Unable to allocate memory\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 		encode_number(machine_code, mode.first_arg, 1);
 		if (strcmp(mode.second_mode, "000") == 0) {
@@ -253,8 +258,8 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else if (strcmp(mode.second_mode, "001") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 3 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory\n");
-				exit(0);
+				printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+				error_found = 1;
 			}
 			encode_number(machine_code, mode.second_arg, 2);
 			return 2;
@@ -262,8 +267,8 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else if (strcmp(mode.second_mode, "011") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 3 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory\n");
-				exit(0);
+				printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+				error_found = 1;
 			}
 			encode_sign(machine_code, 2);
 			return 2;
@@ -271,8 +276,8 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else if (strcmp(mode.second_mode, "101") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 3 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory\n");
-				exit(0);
+				printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+				error_found = 1;
 			}
 			encode_reg(machine_code, mode.second_arg, 2);
 			return 2;
@@ -281,8 +286,8 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 	else if (strcmp(mode.first_mode, "011") == 0) {
 		machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
 		if (machine_code->machine_code == NULL) {
-			printf("Unable to allocate memory\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 		encode_sign(machine_code, 1);
 		if (strcmp(mode.second_mode, "000") == 0) {
@@ -291,8 +296,8 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else if (strcmp(mode.second_mode, "001") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 3 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory\n");
-				exit(0);
+				printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+				error_found = 1;
 			}
 			encode_number(machine_code, mode.second_arg, 2);
 			return 2;
@@ -300,8 +305,8 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else if (strcmp(mode.second_mode, "011") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 3 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory\n");
-				exit(0);
+				printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+				error_found = 1;
 			}
 			encode_sign(machine_code, 2);
 			return 2;
@@ -309,8 +314,8 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else if (strcmp(mode.second_mode, "101") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 3 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory\n");
-				exit(0);
+				printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+				error_found = 1;
 			}
 			encode_reg(machine_code, mode.second_arg, 2);
 			return 2;
@@ -320,8 +325,8 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		if (strcmp(mode.second_mode, "000") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory\n");
-				exit(0);
+				printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+				error_found = 1;
 			}
 			encode_reg(machine_code, mode.first_arg, 1);
 			return 1;
@@ -329,8 +334,8 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else if (strcmp(mode.second_mode, "101") == 0) {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory\n");
-				exit(0);
+				printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+				error_found = 1;
 			}
 			encode_2_regs(machine_code, mode.first_arg, mode.second_arg, 1);
 			return 1;
@@ -338,15 +343,15 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 		else {
 			machine_code->machine_code = (char **)realloc(machine_code->machine_code, 2 * sizeof(*machine_code->machine_code));
 			if (machine_code->machine_code == NULL) {
-				printf("Unable to allocate memory\n");
-				exit(0);
+				printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+				error_found = 1;
 			}
 			encode_reg(machine_code, mode.first_arg, 1);
 			if (strcmp(mode.second_mode, "001") == 0) {
 				machine_code->machine_code = (char **)realloc(machine_code->machine_code, 3 * sizeof(*machine_code->machine_code));
 				if (machine_code->machine_code == NULL) {
-					printf("Unable to allocate memory\n");
-					exit(0);
+					printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+					error_found = 1;
 				}
 				encode_number(machine_code, mode.second_arg, 2);
 				return 2;
@@ -354,8 +359,8 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 			else if (strcmp(mode.second_mode, "011") == 0) {
 				machine_code->machine_code = (char **)realloc(machine_code->machine_code, 3 * sizeof(*machine_code->machine_code));
 				if (machine_code->machine_code == NULL) {
-					printf("Unable to allocate memory\n");
-					exit(0);
+					printf("Error in file: %s, line number %d, Unable to allocate memory\n", globalFileName, globalLineNum);
+					error_found = 1;
 				}
 				encode_sign(machine_code, 2);
 				return 2;
@@ -365,6 +370,7 @@ int address_data(machine_code_type * machine_code, address_mode mode) {
 }
 
 int address_data_second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], address_mode mode, sign_table_ptr * sign_head, int IC) {
+	/* This function encodes data in the second process (Signs) */
 	int sign_index, i;
 	if (strcmp(mode.first_mode, "000") == 0) {
 		if (strcmp(mode.second_mode, "000") == 0) {
@@ -372,7 +378,7 @@ int address_data_second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], addre
 		}
 		else if (strcmp(mode.second_mode, "011") == 0) {
 			sign_index = sign_place(sign_head, mode.second_arg);
-			if (sign_index == 0) {
+			if (sign_index == 0) { /* All extern signs are with place 0 */
 				Instructions[IC][ARE2] = '0';
 				Instructions[IC][ARE1] = '1';
 				mark_extern(sign_head, mode.second_arg, IC);

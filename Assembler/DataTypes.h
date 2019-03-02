@@ -1,10 +1,5 @@
 #pragma once
 
-typedef struct error {
-	char *desc;
-	struct error * next;
-}error;
-
 typedef struct opcode {
 	char * code;
 	char * opcode;

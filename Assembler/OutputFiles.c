@@ -25,11 +25,14 @@ void ObjectFile(char Instructions[MEMORY_SIZE][WORD_SIZE], char Data[MEMORY_SIZE
 	strcpy(outputname, filename);
 	#pragma warning(suppress : 4996)
 	fp = fopen(strcat(outputname, ".ob"), "w");
+	/* Write to file value of IC and DC */
 	fprintf(fp, "%d %d\n", IC, DC);
+	/* Encode in base 64 and write to file every line of instruction */
 	for (i = 0; i < IC; i++) {
 		b64line = b64_encode(Instructions[i]);
 		fprintf(fp, "%c%c\n", b64line[0], b64line[1]);
 	}
+	/* Encode in base 64 and write to file every line of Data */
 	for (i = 0; i < DC; i++) {
 		b64line = b64_encode(Data[i]);
 		fprintf(fp, "%c%c\n", b64line[0], b64line[1]);
@@ -53,6 +56,7 @@ void EntriesFile(sign_table_ptr * sign_head, char * filename) {
 	else {
 		while (ptr != NULL) {
 			if (ptr->isent) {
+				/* Write to file entry signs and their places */
 				fprintf(fp, "%s %d\n", ptr->sign, ptr->place);
 				found_ent = 1;
 			}
@@ -60,12 +64,12 @@ void EntriesFile(sign_table_ptr * sign_head, char * filename) {
 		}
 		fclose(fp);
 	}
-	if (!found_ent) {
+	if (!found_ent) { /* If there are no entry signs delete files */
 		if (remove(outputname) == 0)
-			printf("Deleted successfully\n");
+			return;
 		else {
-			printf("Unable to delete the file\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Unable to delete the file\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 	}
 }
@@ -86,6 +90,7 @@ void ExternsFile(sign_table_ptr * sign_head, char *filename) {
 	else {
 		while (ptr != NULL) {
 			if (ptr->isext) {
+				/* Write to file extern signs and all their references */
 				for (i = 0; i < ptr->num_ref; i++) {
 					fprintf(fp, "%s %d\n", ptr->sign, *(ptr->references + i));
 					found_ext = 1;
@@ -95,12 +100,12 @@ void ExternsFile(sign_table_ptr * sign_head, char *filename) {
 		}
 		fclose(fp);
 	}
-	if (!found_ext) {
+	if (!found_ext) {  /* If there are no extern signs delete files */
 		if (remove(outputname) == 0)
-			printf("Deleted successfully\n");
+			return;
 		else {
-			printf("Unable to delete the file\n");
-			exit(0);
+			printf("Error in file: %s, line number %d, Unable to delete the file\n", globalFileName, globalLineNum);
+			error_found = 1;
 		}
 	}
 }
