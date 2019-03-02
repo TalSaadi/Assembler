@@ -27,6 +27,15 @@ int legal_sign(char *sign) {
 	else if (search_code(sign) != NULL) {
 		return 0;
 	}
+	else if (strLen(sign) > 31) {
+		return 0;
+	}
+	else if (strcmp(sign, ".data") == 0 || strcmp(sign, ".string") == 0 || strcmp(sign, ".extern") == 0 || strcmp(sign, ".entry") == 0) {
+		return 0;
+	}
+	else if (strcmp(sign, ".data:") == 0 || strcmp(sign, ".string:") == 0 || strcmp(sign, ".extern:") == 0 || strcmp(sign, ".entry:") == 0) {
+		return 0;
+	}
 	else {
 		return 1;
 	}
@@ -48,7 +57,19 @@ void clear_args(char * arg) {
 	/*** Traverse the given string. If current character
 	is not space, then place it at index 'count++' ***/
 	for (int i = 0; arg[i]; i++)
-		if (arg[i] != ' ' && arg != '\t' && arg[i] != ',' && arg[i] != '\n' && arg[i] != ':')
+		if (arg[i] != ' ' && arg[i] != '\t' && arg[i] != ',' && arg[i] != '\n' && arg[i] != ':')
 			arg[count++] = arg[i]; /* here count is incremented */
 	arg[count] = '\0';
+}
+
+int strLen(char *s)
+{
+	int length;
+	char *p = s;
+	while (*p != ':' && *p != '\0')
+	{
+		p++;  /* increase the address until the end */
+	}
+	length = p - s;
+	return length; /* Subtract the two addresses, end - start */
 }

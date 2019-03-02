@@ -13,6 +13,9 @@
 
 #define WORD_SIZE 13
 #define LETTER 6
+#define NULL_TER_BIT 12
+#define ARE1 11
+#define ARE2 10
 
 const char b64chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
@@ -24,12 +27,12 @@ void encode_number(machine_code_type * machine_code, char * arg, int line) {
 		exit(0);
 	}
 	num = atoi(arg);
-	machine_code->machine_code[line][11] = '0';
-	machine_code->machine_code[line][10] = '0';
+	machine_code->machine_code[line][ARE1] = '0';
+	machine_code->machine_code[line][ARE2] = '0';
 	for (i = 9; i >= 0; num = num >> 1, i--) {
 		machine_code->machine_code[line][i] = (num & 1) + '0';
 	}
-	machine_code->machine_code[line][12] = '\0';
+	machine_code->machine_code[line][NULL_TER_BIT] = '\0';
 }
 
 void encode_reg(machine_code_type * machine_code, char * reg, int line) {
@@ -46,9 +49,9 @@ void encode_reg(machine_code_type * machine_code, char * reg, int line) {
 	for (i = 5; i < 10; i++) {
 		machine_code->machine_code[line][i] = '0';
 	}
-	machine_code->machine_code[line][10] = '0';
-	machine_code->machine_code[line][11] = '0';
-	machine_code->machine_code[line][12] = '\0';
+	machine_code->machine_code[line][ARE2] = '0';
+	machine_code->machine_code[line][ARE1] = '0';
+	machine_code->machine_code[line][NULL_TER_BIT] = '\0';
 }
 
 void encode_2_regs(machine_code_type * machine_code, char * reg1, char * reg2) {
@@ -66,9 +69,9 @@ void encode_2_regs(machine_code_type * machine_code, char * reg1, char * reg2) {
 	for (i = 9; i >= 5; num = num >> 1, i--) {
 		machine_code->machine_code[1][i] = (num & 1) + '0';
 	}
-	machine_code->machine_code[1][10] = '0';
-	machine_code->machine_code[1][11] = '0';
-	machine_code->machine_code[1][12] = '\0';
+	machine_code->machine_code[1][ARE2] = '0';
+	machine_code->machine_code[1][ARE1] = '0';
+	machine_code->machine_code[1][NULL_TER_BIT] = '\0';
 }
 
 void encode_sign(machine_code_type *machine_code, int line) {
@@ -81,7 +84,7 @@ void encode_sign(machine_code_type *machine_code, int line) {
 	for (i = 0; i < 12; i++) {
 		machine_code->machine_code[line][i] = '?';
 	}
-	machine_code->machine_code[line][12] = '\0';
+	machine_code->machine_code[line][NULL_TER_BIT] = '\0';
 }
 
 char *b64_encode(char *line) {

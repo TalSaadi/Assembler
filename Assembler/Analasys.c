@@ -14,6 +14,9 @@
 #define OPCODE_LENGTH 16
 #define MEMORY_SIZE 1024
 #define WORD_SIZE 13
+#define NULL_TER_BIT 12
+#define ARE1 11
+#define ARE2 10
 
 char * search_code(char * code) {
 	opcode opcode_table[OPCODE_LENGTH] = { {"mov", "0000"}, {"cmp", "0001"}, {"add", "0010"}, {"sub", "0011"}, {"not", "0100"}, {"clr", "0101"}, {"lea", "0110"}, {"inc", "0111"}, {"dec", "1000"}, {"jmp", "1001"}, {"bne", "1010"}, {"red", "1011"}, {"prn", "1100"}, {"jsr", "1101"}, {"rts", "1110"}, {"stop", "1111"} };
@@ -370,18 +373,18 @@ int address_data_second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], addre
 		else if (strcmp(mode.second_mode, "011") == 0) {
 			sign_index = sign_place(sign_head, mode.second_arg);
 			if (sign_index == 0) {
-				Instructions[IC][10] = '0';
-				Instructions[IC][11] = '1';
+				Instructions[IC][ARE2] = '0';
+				Instructions[IC][ARE1] = '1';
 				mark_extern(sign_head, mode.second_arg, IC);
 			}
 			else {
-				Instructions[IC][10] = '1';
-				Instructions[IC][11] = '0';
+				Instructions[IC][ARE2] = '1';
+				Instructions[IC][ARE1] = '0';
 			}
 			for (i = 9; i >= 0; sign_index = sign_index >> 1, i--) {
 				Instructions[IC][i] = (sign_index & 1) + '0';
 			}
-			Instructions[IC][12] = '\0';
+			Instructions[IC][NULL_TER_BIT] = '\0';
 			return 1;
 		}
 		else {
@@ -396,18 +399,18 @@ int address_data_second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], addre
 		else if (strcmp(mode.second_mode, "011") == 0) {
 			sign_index = sign_place(sign_head, mode.second_arg);
 			if (sign_index == 0) {
-				Instructions[IC][10] = '0';
-				Instructions[IC][11] = '1';
+				Instructions[IC][ARE2] = '0';
+				Instructions[IC][ARE1] = '1';
 				mark_extern(sign_head, mode.second_arg, IC);
 			}
 			else {
-				Instructions[IC][10] = '1';
-				Instructions[IC][11] = '0';
+				Instructions[IC][ARE2] = '1';
+				Instructions[IC][ARE1] = '0';
 			}
 			for (i = 9; i >= 0; sign_index = sign_index >> 1, i--) {
 				Instructions[IC][i] = (sign_index & 1) + '0';
 			}
-			Instructions[IC][12] = '\0';
+			Instructions[IC][NULL_TER_BIT] = '\0';
 			return 1;
 		}
 		else {
@@ -417,18 +420,18 @@ int address_data_second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], addre
 	else if (strcmp(mode.first_mode, "011") == 0) {
 		sign_index = sign_place(sign_head, mode.first_arg);
 		if (sign_index == 0) {
-			Instructions[IC][10] = '0';
-			Instructions[IC][11] = '1';
+			Instructions[IC][ARE2] = '0';
+			Instructions[IC][ARE1] = '1';
 			mark_extern(sign_head, mode.first_arg, IC);
 		}
 		else {
-			Instructions[IC][10] = '1';
-			Instructions[IC][11] = '0';
+			Instructions[IC][ARE2] = '1';
+			Instructions[IC][ARE1] = '0';
 		}
 		for (i = 9; i >= 0; sign_index = sign_index >> 1, i--) {
 			Instructions[IC][i] = (sign_index & 1) + '0';
 		}
-		Instructions[IC][12] = '\0';
+		Instructions[IC][NULL_TER_BIT] = '\0';
 		IC++;
 		if (strcmp(mode.second_mode, "000") == 0) {
 			return 1;
@@ -436,18 +439,18 @@ int address_data_second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], addre
 		else if (strcmp(mode.second_mode, "011") == 0) {
 			sign_index = sign_place(sign_head, mode.second_arg);
 			if (sign_index == 0) {
-				Instructions[IC][10] = '0';
-				Instructions[IC][11] = '1';
+				Instructions[IC][ARE2] = '0';
+				Instructions[IC][ARE1] = '1';
 				mark_extern(sign_head, mode.second_arg, IC);
 			}
 			else {
-				Instructions[IC][10] = '1';
-				Instructions[IC][11] = '0';
+				Instructions[IC][ARE2] = '1';
+				Instructions[IC][ARE1] = '0';
 			}
 			for (i = 9; i >= 0; sign_index = sign_index >> 1, i--) {
 				Instructions[IC][i] = (sign_index & 1) + '0';
 			}
-			Instructions[IC][12] = '\0';
+			Instructions[IC][NULL_TER_BIT] = '\0';
 			return 2;
 		}
 		else {
@@ -469,18 +472,18 @@ int address_data_second_process(char Instructions[MEMORY_SIZE][WORD_SIZE], addre
 			else if (strcmp(mode.second_mode, "011") == 0) {
 				sign_index = sign_place(sign_head, mode.second_arg);
 				if (sign_index == 0) {
-					Instructions[IC][10] = '0';
-					Instructions[IC][11] = '1';
+					Instructions[IC][ARE2] = '0';
+					Instructions[IC][ARE1] = '1';
 					mark_extern(sign_head, mode.second_arg, IC);
 				}
 				else {
-					Instructions[IC][10] = '1';
-					Instructions[IC][11] = '0';
+					Instructions[IC][ARE2] = '1';
+					Instructions[IC][ARE1] = '0';
 				}
 				for (i = 9; i >= 0; sign_index = sign_index >> 1, i--) {
 					Instructions[IC][i] = (sign_index & 1) + '0';
 				}
-				Instructions[IC][12] = '\0';
+				Instructions[IC][NULL_TER_BIT] = '\0';
 				return 2;
 			}
 		}

@@ -12,6 +12,7 @@
 #include "StringsProcess.h"
 
 #define WORD_SIZE 13
+#define NULL_TER_BIT 12
 
 machine_code_type first_process(char *line, int IC, int DC, sign_table_ptr * sign_head) {
 	int i, k, num, found_flag = 0, num_lines = 0;
@@ -74,10 +75,10 @@ machine_code_type first_process(char *line, int IC, int DC, sign_table_ptr * sig
 					exit(0);
 				}
 				num = atoi(line);
-				for (i = 11; i >=0; num = num >> 1, i--) {
+				for (i = 11; i >= 0; num = num >> 1, i--) {
 					machine_code.machine_code[num_lines][i] = (num & 1) + '0';
 				}
-				machine_code.machine_code[num_lines][12] = '\0';
+				machine_code.machine_code[num_lines][NULL_TER_BIT] = '\0';
 				num_lines++;
 				#pragma warning(suppress : 4996)
 				line = strtok(NULL, ",");
@@ -90,7 +91,7 @@ machine_code_type first_process(char *line, int IC, int DC, sign_table_ptr * sig
 			}
 			#pragma warning(suppress : 4996)
 			line = strtok(NULL, " ");
-			if (*line == '"') {
+			if ((*line == '"') && (*(line + (strlen(line) - 1)) == '"')) {
 				line++;
 				while (*line != '"') {
 					num = *line;
@@ -107,7 +108,7 @@ machine_code_type first_process(char *line, int IC, int DC, sign_table_ptr * sig
 					for (k = 11; k >= 0; num = num >> 1, k--) {
 						machine_code.machine_code[num_lines][k] = (num & 1) + '0';
 					}
-					machine_code.machine_code[num_lines][12] = '\0';
+					machine_code.machine_code[num_lines][NULL_TER_BIT] = '\0';
 					num_lines++;
 					line++;
 				}

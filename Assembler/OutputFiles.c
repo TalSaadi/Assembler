@@ -53,6 +53,7 @@ void EntriesFile(sign_table_ptr * sign_head, char * filename) {
 		while (ptr != NULL) {
 			if (ptr->isent) {
 				fprintf(fp, "%s %d\n", ptr->sign, ptr->place);
+				found_ent = 1;
 			}
 			ptr = ptr->next;
 		}
@@ -60,9 +61,9 @@ void EntriesFile(sign_table_ptr * sign_head, char * filename) {
 	}
 	if (!found_ent) {
 		if (remove(outputname) == 0)
-			printf("Deleted successfully");
+			printf("Deleted successfully\n");
 		else {
-			printf("Unable to delete the file");
+			printf("Unable to delete the file\n");
 			exit(0);
 		}
 	}
@@ -86,6 +87,7 @@ void ExternsFile(sign_table_ptr * sign_head, char *filename) {
 			if (ptr->isext) {
 				for (i = 0; i < ptr->num_ref; i++) {
 					fprintf(fp, "%s %d\n", ptr->sign, *(ptr->references + i));
+					found_ext = 1;
 				}
 			}
 			ptr = ptr->next;
@@ -94,9 +96,9 @@ void ExternsFile(sign_table_ptr * sign_head, char *filename) {
 	}
 	if (!found_ext) {
 		if (remove(outputname) == 0)
-			printf("Deleted successfully");
+			printf("Deleted successfully\n");
 		else {
-			printf("Unable to delete the file");
+			printf("Unable to delete the file\n");
 			exit(0);
 		}
 	}

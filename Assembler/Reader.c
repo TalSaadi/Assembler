@@ -13,7 +13,7 @@
 #include "OutputFiles.h"
 #include "SecondProcess.h"
 
-#define MAX_LINE_SIZE 80
+#define MAX_LINE_SIZE 82
 #define MEMORY_SIZE 1024
 #define WORD_SIZE 13
 
